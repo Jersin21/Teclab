@@ -1,0 +1,42 @@
+# Dependencias
+/node_modules
+
+# Archivos de configuración locales
+.env
+
+# Archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de registro y archivos generados automáticamente
+*.log
+*.log.*
+npm-debug.log*
+
+# Archivos temporales
+*.tmp
+
+# Archivos de caché y compilación
+/dist
+/cache
+/out
+
+# Dependencias locales (puede ser personalizado según tu entorno)
+/config/local.js
+
+# Archivos de respaldo (por ejemplo, archivos con la extensión .bak)
+*.bak
+
+# Archivos de construcción de IDEs o editores de código
+.idea/
+.vscode/
+
+# Archivos de configuración de proyectos específicos (por ejemplo, para Visual Studio Code)
+.code-workspace
+
+# Archivos de construcción de paquetes (por ejemplo, para TypeScript)
+*.js.map
+*.js.map.*
+
+# Archivos generados por pruebas y cobertura
+/coverage
