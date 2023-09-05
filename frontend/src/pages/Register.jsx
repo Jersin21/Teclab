@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState,useEffect} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 import { Flip, ToastContainer, toast } from "react-toastify";
@@ -8,12 +8,18 @@ import axios from "axios";
 import { registerRoute } from "../utils/APIroute";
 
 function Register() {
+  const navigate = useNavigate()
   const [values, setValues] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  useEffect(()=>{
+    if(localStorage.getItem("LabUser")){
+      navigate("/")
+    }
+  },[])
   const toastOptions =  {
     position: "top-right",
     hideProgressBar: true,
@@ -25,13 +31,19 @@ function Register() {
   const handleSubmit = async(e) => {
     e.preventDefault();
     if(handleValidation()){
-        const {username,email,password,confirmPassword} = values
+        const {username,email,password} = values
         const {data} = await axios.post(registerRoute,{
             username,
             email,
             password,
         })
-
+        if(data.status === false){
+          toast.error(data.msg, toastOptions)
+        }
+        if(data.status === true){
+          localStorage.setItem("LabUser",JSON.stringify(data.user))
+          navigate("/")
+        }
     }
   };
   const handleValidation = () => {
@@ -42,7 +54,9 @@ function Register() {
       return false
     }else if(username.length < 3){
         toast.error("Username should be greater than 3",toastOptions)
+        return false
     }
+    return true
   };
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
