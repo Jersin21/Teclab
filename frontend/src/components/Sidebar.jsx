@@ -49,7 +49,7 @@ const SidebarMenuItem = styled.li`
   transition: background-color 0.3s ease, color 0.3s ease;
   background-color: ${({ isActive }) => (isActive ? '#4e0eff' : 'transparent')};
   border-radius: 10px;
-  border: 2px solid transparent;
+  border: 2px solid white;
   display: flex;
   align-items: center;
 

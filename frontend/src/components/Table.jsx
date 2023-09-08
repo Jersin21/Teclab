@@ -1,4 +1,3 @@
-// Tabla.js
 
 import React from 'react';
 import styled from 'styled-components';
@@ -11,7 +10,7 @@ const TableWrapper = styled.table`
 `;
 
 const TableHead = styled.thead`
-  background-color: #0c0c0c;
+  background-color: #25136A;
   color: white;
 `;
 const TableContainer = styled.div`
@@ -35,6 +34,7 @@ const ActionButton = styled.button`
 `;
 
 const Table = ({ data }) => {
+  console.log(data)
   return (
     <TableContainer>
 
@@ -51,10 +51,10 @@ const Table = ({ data }) => {
       <TableBody>
         {data.map((item, index) => (
             <TableRow key={index}>
-            <TableCell>{item.nombre}</TableCell>
-            <TableCell>{item.apellido}</TableCell>
-            <TableCell>{item.especialidad}</TableCell>
-            <TableCell>{item.ciudad}</TableCell>
+            <TableCell>{item.paciente}</TableCell>
+            <TableCell>{item.fecha}</TableCell>
+            <TableCell>{item.muestra}</TableCell>
+            <TableCell>{item.estado}</TableCell>
             <TableCell>
               <ActionButton style={{ backgroundColor: 'blue', color: 'white' }}>Editar</ActionButton>
               <ActionButton style={{ backgroundColor: 'red', color: 'white' }}>Eliminar</ActionButton>
