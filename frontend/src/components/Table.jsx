@@ -1,6 +1,10 @@
-
-import React from 'react';
-import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
+import React from "react";
+import styled from "styled-components";
+import axios from "axios";
+import { analisysRoute } from "../utils/APIroute";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Estilos para la tabla
 const TableWrapper = styled.table`
@@ -10,7 +14,7 @@ const TableWrapper = styled.table`
 `;
 
 const TableHead = styled.thead`
-  background-color: #25136A;
+  background-color: #25136a;
   color: white;
 `;
 const TableContainer = styled.div`
@@ -23,7 +27,7 @@ const TableRow = styled.tr``;
 const TableCell = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
-  color:white;
+  color: white;
 `;
 
 const ActionButton = styled.button`
@@ -34,37 +38,86 @@ const ActionButton = styled.button`
 `;
 
 const Table = ({ data }) => {
-  console.log(data)
+  const navigate = useNavigate();
+
+  const toastOptions = {
+    position: "top-right",
+    hideProgressBar: true,
+    pauseOnHover: true,
+    draggable: true,
+    autoClose: 3000,
+    theme: "dark",
+  };
+
   return (
     <TableContainer>
+      <ActionButton
+        onClick={() => {
+          navigate("/analisys");
+        }}
+        style={{ backgroundColor: "green", color: "white" }}
+      >
+        CREAR
+      </ActionButton>
 
-    <TableWrapper>
-      <TableHead>
-        <TableRow>
-          <TableCell>Nombre</TableCell>
-          <TableCell>Apellido</TableCell>
-          <TableCell>Especialidad</TableCell>
-          <TableCell>Ciudad</TableCell>
-          <TableCell>Acciones</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {data.map((item, index) => (
-            <TableRow key={index}>
-            <TableCell>{item.paciente}</TableCell>
-            <TableCell>{item.fecha}</TableCell>
-            <TableCell>{item.muestra}</TableCell>
-            <TableCell>{item.estado}</TableCell>
-            <TableCell>
-              <ActionButton style={{ backgroundColor: 'blue', color: 'white' }}>Editar</ActionButton>
-              <ActionButton style={{ backgroundColor: 'red', color: 'white' }}>Eliminar</ActionButton>
-              <ActionButton style={{ backgroundColor: 'green', color: 'white' }}>Visualizar</ActionButton>
-            </TableCell>
+      <TableWrapper>
+        <TableHead>
+          <TableRow>
+            <TableCell>Nombre</TableCell>
+            <TableCell>Fecha</TableCell>
+            <TableCell>Tipo de muestra</TableCell>
+            <TableCell>Estado</TableCell>
+            <TableCell>Acciones</TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </TableWrapper>
-        </TableContainer>
+        </TableHead>
+        <TableBody>
+          {data.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell>{item.paciente}</TableCell>
+              <TableCell>{item.fecha}</TableCell>
+              <TableCell>{item.muestra}</TableCell>
+              <TableCell>{item.estado}</TableCell>
+              <TableCell>
+                <ActionButton
+                  style={{ backgroundColor: "blue", color: "white" }}
+                  onClick={() => {
+                    navigate("/analisys/" + item.id);
+                  }}
+                >
+                  Editar
+                </ActionButton>
+                <ActionButton
+                  style={{ backgroundColor: "red", color: "white" }}
+                  onClick={async () => {
+                    try {
+                      const { data } = await axios.delete(
+                        analisysRoute + "/" + item.id
+                      );
+                      if (data.status === false) {
+                        toast.error("No se pudo eliminar", toastOptions);
+                      }
+                      if (data.status === true) {
+                        toast.success("Se Elinmino", toastOptions);
+                      }
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }}
+                >
+                  Eliminar
+                </ActionButton>
+                <ActionButton
+                  style={{ backgroundColor: "green", color: "white" }}
+                >
+                  Visualizar
+                </ActionButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </TableWrapper>
+      <ToastContainer />
+    </TableContainer>
   );
 };
 

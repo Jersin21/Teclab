@@ -1,64 +1,52 @@
 const { DataTypes } = require("sequelize");
 const bd = require("../db/db");
 
-const Solicitud = bd.define(
-  "solicitud",
+const Persona = bd.define(
+  "persona",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    paciente: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    fecha: {
+    apellidos: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    paciente: {
+    ci: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    fecha: {
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
-    muestra: {
+    celular: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
-    observaciones: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    estado: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    idUsuarioMedico: {
+    direccion: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
-    },
-    idUsuarioLab: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true,
     },
   },
   {
     timestamps: false,
-    tableName: "solicitud",
+    tableName: "persona",
   }
 );
 
-module.exports = Solicitud;
+
+
+module.exports = Persona;

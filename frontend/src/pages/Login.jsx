@@ -8,52 +8,51 @@ import axios from "axios";
 import { loginRoute } from "../utils/APIroute";
 
 function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [values, setValues] = useState({
     username: "",
     password: "",
   });
-  useEffect(()=>{
-    if(localStorage.getItem("LabUser")){
-      navigate("/")
+  useEffect(() => {
+    if (localStorage.getItem("LabUser")) {
+      navigate("/");
     }
-  },[])
-  const toastOptions =  {
+  }, []);
+  const toastOptions = {
     position: "top-right",
     hideProgressBar: true,
     pauseOnHover: true,
     draggable: true,
     autoClose: 3000,
     theme: "dark",
-}
-  const handleSubmit = async(e) => {
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(handleValidation()){
-        const {username,password} = values
-        const {data} = await axios.post(loginRoute,{
-            username,
-            password,
-        })
-        if(data.status === false){
-          toast.error(data.msg, toastOptions)
-        }
-        if(data.status === true){
-          localStorage.setItem("LabUser",JSON.stringify(data.user))
-          navigate("/")
-        }
+    if (handleValidation()) {
+      const { username, password } = values;
+      const { data } = await axios.post(loginRoute, {
+        username,
+        password,
+      });
+      if (data.status === false) {
+        toast.error(data.msg, toastOptions);
+      }
+      if (data.status === true) {
+        localStorage.setItem("LabUser", JSON.stringify(data.user));
+        navigate("/");
+      }
     }
   };
   const handleValidation = () => {
-    const { username, password,  } = values;
+    const { username, password } = values;
     if (password === "") {
-      toast.error("Username and password is required", toastOptions,
-      );
-      return false
-    }else if(username === ""){
-        toast.error("Username and password is required",toastOptions)
-        return false
+      toast.error("Username and password is required", toastOptions);
+      return false;
+    } else if (username === "") {
+      toast.error("Username and password is required", toastOptions);
+      return false;
     }
-    return true
+    return true;
   };
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -88,7 +87,7 @@ function Login() {
           </span>
         </form>
       </FormContainer>
-      <ToastContainer transition={Flip}/>
+      <ToastContainer transition={Flip} />
     </>
   );
 }
