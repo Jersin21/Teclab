@@ -1,7 +1,13 @@
 import axios from "axios";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { medicoRoute } from "../utils/APIroute";
-import Sidebar from "./Sidebar"
+import Sidebar from "./Sidebar";
+import styled from "styled-components";
+
+const FormContainer = styled.div`
+  margin-left: 250px; /* Ancho del Sidebar */
+  display: flex;
+`;
 
 const FormAsignar = ({ solicitud }) => {
   const [medicos, setMedicos] = useState([]);
@@ -9,44 +15,38 @@ const FormAsignar = ({ solicitud }) => {
 
   useEffect(() => {
     const fetchMedicos = async () => {
-      const response = await axios.get(medicoRoute)
-      const medicos = response.data
-      setMedicos(medicos);
-      console.log(medicos)
+      try {
+        const response = await axios.get(medicoRoute);
+        const medicos = response.data;
+        setMedicos(medicos);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchMedicos();
   }, []);
 
-  const handleEnviar = () => {
-    // Actualizamos el estado de la solicitud
-    solicitud.medico = medicoSeleccionado;
-    solicitud.estado = "Asignado";
-
-    // Actualizamos la tabla
-    // ...
-  };
-
   return (
-    <div >
-      <Sidebar/>
-      <h1>Asignar médico</h1>
-      <form onSubmit={handleEnviar}>
-        <select
-          value={medicoSeleccionado}
-          onChange={(e) => setMedicoSeleccionado(e.target.value)}
-          options={medicos.map((medico) => ({
-            value: medico.especialidad,
-            label: medico.especialidad,
-          }))}
-        />
-        <button
-          type="submit"
-          
-        >
-          Asignar
-        </button>
-      </form>
+    <div>
+      <FormContainer>
+        <Sidebar />
+
+        <h1>Asignar médico</h1>
+        <form>
+          <select
+            name=""
+            onChange={(e) => setMedicoSeleccionado(e.target.value)}
+          >
+            {medicos.map((medicos) => (
+              <option id={medicos.id} value={medicos.User.persona.nombre}>
+                {medicos.User.persona.nombre} {medicos.User.persona.apellidos}
+              </option>
+            ))}
+          </select>
+          <button type="submit">Asignar</button>
+        </form>
+      </FormContainer>
     </div>
   );
 };

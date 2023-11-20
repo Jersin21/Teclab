@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const bd = require("../db/db");
+const Categoria = require("./categoriaModel")
 
 const Analisys = bd.define(
   "analisis",
@@ -25,5 +26,7 @@ const Analisys = bd.define(
     tableName: "analisis",
   }
 );
+Analisys.belongsTo(Categoria, { foreignKey: 'idCategoria' });
+
 
 module.exports = Analisys;

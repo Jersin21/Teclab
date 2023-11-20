@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const bd = require("../db/db");
+const Persona = require("./personaModel");
+const TipoUsuario = require("./tipousuarioModel");
 
 const User = bd.define(
   "Users",
@@ -44,5 +46,8 @@ const User = bd.define(
   }
 );
 
+User.belongsTo(Persona, { foreignKey: "idPersona" });
+
+User.belongsTo(TipoUsuario, { foreignKey: 'idTipoUsuario' });
 
 module.exports = User;

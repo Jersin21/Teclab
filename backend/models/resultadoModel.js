@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const bd = require("../db/db");
+const SolicitudDetalle = require("./solicituddetalleModel")
 
 const Resultado = bd.define(
   "resultado",
@@ -30,5 +31,6 @@ const Resultado = bd.define(
   }
 );
 
+Resultado.belongsTo(SolicitudDetalle, { foreignKey: 'idSolicitudDetalle'});
 
 module.exports = Resultado;

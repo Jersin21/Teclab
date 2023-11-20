@@ -27,6 +27,8 @@ module.exports.registerAnalisys = async (req, res, next) => {
       muestra: tipo,
       observaciones: descripcion,
       estado: "Iniciado",
+      idUsuarioMedico: 1,
+      idUsuarioLab: "",
     });
     console.log(newAnalisys);
 
