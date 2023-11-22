@@ -6,15 +6,12 @@ import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 import { analisysRoute, tipoanalisysRoute } from "../utils/APIroute";
 import Sidebar from "./Sidebar";
+import RadioButtonsContainer from "./RadiobuttonsContainer";
 
 const FormContainer = styled.div`
-    margin-left: 250px; /* Ancho del Sidebar */
-    display: flex;
-  `;
-  const RadioButtonsContainer = styled.div`
-  overflow-y: hidden;
-  overflow-x: scroll;
-  width: 100%;
+  margin-left: 300px; /* Ancho del Sidebar */
+  margin-top: 30px; /* Ancho del Sidebar */
+  display: flex;
 `;
 
 function FormAnalisys() {
@@ -23,11 +20,10 @@ function FormAnalisys() {
   const [date, setDate] = useState("");
   const [data, setData] = useState([]);
   const [descripcion, setDescripcion] = useState("");
+  const [selectedAnalisis, setSelectedAnalisis] = useState([]);
 
   const params = useParams();
   const navigate = useNavigate();
-
-  
 
   const toastOptions = {
     position: "top-right",
@@ -46,6 +42,7 @@ function FormAnalisys() {
         tipo,
         date,
         descripcion,
+        idAnalisis: selectedAnalisis,
       });
       if (data.status == false) {
         toast.error(data.msg, toastOptions);
@@ -59,13 +56,8 @@ function FormAnalisys() {
         tipo,
         date,
         descripcion,
+        idAnalisis: selectedAnalisis,
       });
-      // if (data.status == false) {
-      //   toast.error(data.msg, toastOptions);
-      // }
-      // if (data.status === true) {
-      //   toast.success("Se actualizo la solicitud", toastOptions);
-      // }
     }
     e.target.reset();
     navigate("/");
@@ -84,10 +76,12 @@ function FormAnalisys() {
     }
     async function getAnalisys() {
       const res = await axios.get(tipoanalisysRoute);
+      console.log(data);
       setData(res.data);
     }
     getAnalisys();
   }, []);
+
   return (
     <FormContainer>
       <Sidebar></Sidebar>
@@ -101,11 +95,14 @@ function FormAnalisys() {
         <select
           name=""
           id=""
-          onChange={(e) => setTipo(e.target.value)}
+          onChange={(e) => {
+            setTipo(e.target.value);
+          }}
           value={tipo}
         >
-          <option value="Laboratorio">Laboratorio</option>
+          <option value="">Seleccione una opcion</option>
           <option value="Clinica">Envio de muestra</option>
+          <option value="Laboratorio">Laboratorio</option>
         </select>
         <input
           type="date"
@@ -122,16 +119,12 @@ function FormAnalisys() {
           rows="1"
           onChange={(e) => setDescripcion(e.target.value)}
         />
-        <RadioButtonsContainer >
-        {data.map((item, index) => (
-        
-          <label key={index}>
-            <input type="radio" value={item.name} id="" />
-            {item.name}
-          </label>
-          
-        ))}
-        </RadioButtonsContainer>
+        <RadioButtonsContainer
+          datos={data}
+          selectedAnalisis={selectedAnalisis}
+          setSelectedAnalisis={setSelectedAnalisis}
+        />
+
         <button>{params.id ? "Update" : "Save"}</button>
       </form>
       <ToastContainer></ToastContainer>

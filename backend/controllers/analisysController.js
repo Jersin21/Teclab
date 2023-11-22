@@ -1,4 +1,6 @@
 const Solicitud = require("../models/analisysModel");
+const SolicitudDetalle = require("../models/solicituddetalleModel");
+const solicitudDetalle = require("../models/solicituddetalleModel")
 
 module.exports.solicitudes = async (req, res, next) => {
   try {
@@ -19,7 +21,7 @@ module.exports.solicitud = async (req, res, next) => {
 };
 module.exports.registerAnalisys = async (req, res, next) => {
   try {
-    const { name, tipo, date, descripcion } = req.body;
+    const { name, tipo, date, descripcion, idAnalisis } = req.body;
 
     const newAnalisys = await Solicitud.create({
       paciente: name,
@@ -27,11 +29,15 @@ module.exports.registerAnalisys = async (req, res, next) => {
       muestra: tipo,
       observaciones: descripcion,
       estado: "Iniciado",
-      idUsuarioMedico: 1,
-      idUsuarioLab: "",
+      idUsuarioMedico: 13,
+      idUsuarioLab: 16,
     });
-    console.log(newAnalisys);
-
+    for (const id of idAnalisis) {
+      await SolicitudDetalle.create({
+        idSolicitud: newAnalisys.id,
+        idAnalisis: id,
+      });
+    }
     return res.json({ status: true, newAnalisys });
   } catch (error) {
     console.log(error);
