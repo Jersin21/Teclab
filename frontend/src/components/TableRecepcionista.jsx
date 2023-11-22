@@ -1,9 +1,6 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
-
-
 
 const TableWrapper = styled.table`
   width: 100%;
@@ -35,47 +32,46 @@ const ActionButton = styled.button`
   cursor: pointer;
 `;
 
+function TableRecepcionista({ data }) {
+  const navigate = useNavigate();
+  return (
+    <TableContainer>
+      <TableWrapper>
+        <TableHead>
+          <TableRow>
+            <TableCell>Nombre</TableCell>
+            <TableCell>Fecha</TableCell>
+            <TableCell>Tipo de muestra</TableCell>
+            <TableCell>Estado</TableCell>
+            <TableCell>Acciones</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell>{item.paciente}</TableCell>
+              <TableCell>{item.fecha}</TableCell>
+              <TableCell>{item.muestra}</TableCell>
+              <TableCell>{item.estado}</TableCell>
+              <TableCell>
+                <ActionButton
+                  style={{ backgroundColor: "blue", color: "white" }}
+                  onClick={() => {
+                    navigate(`/recepcionista/asignar/${item.id}`, {
+                      state: item,
+                    });
+                  }}
+                >
+                  Asignar
+                </ActionButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </TableWrapper>
+      {/* <ToastContainer/> */}
+    </TableContainer>
+  );
+}
 
-function TableRecepcionista({data}) {
-
-  const navigate = useNavigate()
-    return (
-        <TableContainer>
-          <TableWrapper>
-            <TableHead>
-              <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Fecha</TableCell>
-                <TableCell>Tipo de muestra</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>{item.paciente}</TableCell>
-                  <TableCell>{item.fecha}</TableCell>
-                  <TableCell>{item.muestra}</TableCell>
-                  <TableCell>{item.estado}</TableCell>
-                  <TableCell>
-                    <ActionButton
-                      style={{ backgroundColor: "blue", color: "white" }}
-                      onClick={() => {
-                        navigate("/recepcionista/asignar");
-                      }}
-                    >
-                      Asignar
-                    </ActionButton>
-                      
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </TableWrapper>
-          {/* <ToastContainer/> */}
-        </TableContainer>
-      );
-    };
-
-export default TableRecepcionista
+export default TableRecepcionista;

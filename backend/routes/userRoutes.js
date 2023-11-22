@@ -7,6 +7,7 @@ const {
   deleteAnalisys,
   getSolicitudRecepcionista,
   getSolicitudResponsable,
+  asignarResponsable,
 } = require("../controllers/analisysController");
 const { TipoAnalisis } = require("../controllers/tipoanalisysController");
 const { getMedicos } = require("../controllers/medicosController");
@@ -23,6 +24,7 @@ router.delete("/analisys/:id", deleteAnalisys);
 router.get("/tipoanalisys", TipoAnalisis);
 
 router.get("/recepcionista", getSolicitudRecepcionista);
+router.put("/recepcionista/:id", asignarResponsable)
 router.get("/responsable", getSolicitudResponsable);
 
 router.get("/medicos", getMedicos);

@@ -19,7 +19,7 @@ function App() {
           <Route path="/analisys/:id" element={<FormAnalisys />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/recepcionista" element={<RecepcionistaPage />} />
-          <Route path="/recepcionista/asignar" element={<FormAsignar />} />
+          <Route path="/recepcionista/asignar/:id" element={<FormAsignar />} />
           <Route path="/responsable" element={<ResponsablePage />} />
         </Routes>
       </BrowserRouter>

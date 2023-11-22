@@ -1,6 +1,6 @@
 const Solicitud = require("../models/analisysModel");
 const SolicitudDetalle = require("../models/solicituddetalleModel");
-const solicitudDetalle = require("../models/solicituddetalleModel")
+const solicitudDetalle = require("../models/solicituddetalleModel");
 
 module.exports.solicitudes = async (req, res, next) => {
   try {
@@ -30,7 +30,6 @@ module.exports.registerAnalisys = async (req, res, next) => {
       observaciones: descripcion,
       estado: "Iniciado",
       idUsuarioMedico: 13,
-      idUsuarioLab: 16,
     });
     for (const id of idAnalisis) {
       await SolicitudDetalle.create({
@@ -49,18 +48,56 @@ module.exports.updateAnalisys = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, tipo, date, descripcion } = req.body;
-    const analisys = await Solicitud.findByPk(id);
-    analisys.paciente = name;
-    analisys.muestra = tipo;
-    analisys.fecha = date;
-    analisys.observaciones = descripcion;
-    await analisys.save();
 
-    return res.json({ status: true, analisys });
+    const analisys = await Solicitud.findByPk(id);
+
+    if (!analisys) {
+      return res
+        .status(404)
+        .json({ status: false, msg: "Análisis no encontrado" });
+    }
+
+    const updatedAnalisys = await analisys.update({
+      paciente: name,
+      muestra: tipo,
+      fecha: date,
+      observaciones: descripcion,
+    });
+
+    return res.json({ status: true, analisys: updatedAnalisys });
   } catch (error) {
-    return res.json({ msg: error, status: false });
+    console.error(error);
+    return res
+      .status(500)
+      .json({ msg: "Error interno del servidor", status: false });
   }
 };
+
+module.exports.asignarResponsable = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { idUsuarioLab } = req.body;
+
+    const asignar = await Solicitud.findByPk(id);
+
+    if (!asignar) {
+      return res
+        .status(404)
+        .json({ status: false, msg: "Solicitud no encontrada" });
+    }
+
+    const updatedAsignar = await asignar.update({
+      idUsuarioLab,
+      estado: "Pendiente",
+    });
+
+    return res.json({ status: true, asignar: updatedAsignar });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
 module.exports.deleteAnalisys = async (req, res, next) => {
   try {
     const { id } = req.params;
