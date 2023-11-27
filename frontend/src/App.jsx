@@ -7,6 +7,7 @@ import RecepcionistaPage from "./pages/RecepcionistaPage";
 import ResponsablePage from "./pages/ResponsablePage";
 import FormResponsable from "./components/FormResponsable";
 import FormAsignar from "./components/FormAsignar";
+import FormSubir from "./components/FormSubir";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/recepcionista" element={<RecepcionistaPage />} />
           <Route path="/recepcionista/asignar/:id" element={<FormAsignar />} />
           <Route path="/responsable" element={<ResponsablePage />} />
+          <Route path="/responsable/subir/:id" element={<FormSubir />} />
         </Routes>
       </BrowserRouter>
     </>

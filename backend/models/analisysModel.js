@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const bd = require("../db/db");
 const User = require("./userModel")
+const SolicitudDetalle = require("./solicituddetalleModel")
 
 const Solicitud = bd.define(
   "solicitud",
@@ -52,7 +53,9 @@ const Solicitud = bd.define(
   }
 );
 
-Solicitud.belongsTo(User, { foreignKey: 'idUsuarioMedico', as: 'UsuarioMedico' });
-Solicitud.belongsTo(User, { foreignKey: 'idUsuarioLab', as: 'UsuarioLab' });
+Solicitud.belongsTo(User, { foreignKey: 'idUsuarioMedico' });
+Solicitud.belongsTo(User, { foreignKey: 'idUsuarioLab' });
+Solicitud.hasMany(SolicitudDetalle, { foreignKey: 'idSolicitud' });
+
 
 module.exports = Solicitud;

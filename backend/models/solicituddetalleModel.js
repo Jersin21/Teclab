@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const bd = require("../db/db");
-const Solicitud = require("./analisysModel")
-const Analisys = require("./tipoanalisysModel")
+const Solicitud = require("./analisysModel");
+const Analisys = require("./tipoanalisysModel");
 
 const SolicitudDetalle = bd.define(
   "solicituddetalle",
@@ -14,19 +14,26 @@ const SolicitudDetalle = bd.define(
     idSolicitud: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "solicitud",
+        key: "id",
+      },
     },
     idAnalisis: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "analisis",
+        key: "id",
+      },
     },
   },
   {
     timestamps: false,
-    tableName:"solicituddetalle"
+    tableName: "solicituddetalle",
   }
 );
-SolicitudDetalle.belongsTo(Solicitud, { foreignKey: 'idSolicitud' });
 
-SolicitudDetalle.belongsTo(Analisys, { foreignKey: 'idAnalisis' });
+SolicitudDetalle.belongsTo(Analisys, { foreignKey: "idAnalisis" });
 
 module.exports = SolicitudDetalle;

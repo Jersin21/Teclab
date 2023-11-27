@@ -1,6 +1,9 @@
 const Solicitud = require("../models/analisysModel");
 const SolicitudDetalle = require("../models/solicituddetalleModel");
-const solicitudDetalle = require("../models/solicituddetalleModel");
+const Image = require("../models/imageModel");
+const Resultado = require("../models/resultadoModel");
+const Analisys = require("../models/tipoanalisysModel");
+const Categoria = require("../models/categoriaModel");
 
 module.exports.solicitudes = async (req, res, next) => {
   try {
@@ -128,3 +131,58 @@ module.exports.getSolicitudResponsable = async (req, res, next) => {
     res.json({ msg: "No se pudo obtener los datos", status: false });
   }
 };
+module.exports.subirResultado = async (req, res, next) => {
+  try {
+    const { id, image_path, detalle, fecha } = req.body;
+
+    const solicitud = await Solicitud.findByPk(id);
+    const subirRes = solicitud.update({
+      estado: "Completado",
+    });
+
+    await Image.create({
+      image_path,
+      idSolicitudDetalle,
+    });
+    await Resultado.create({
+      detalle,
+      fecha,
+      idSolicitudDetalle,
+    });
+
+    return res.json({ status: true, subirRes });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+module.exports.getAnalisys = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const solicitud = await Solicitud.findByPk(id, {
+      include: [
+        {
+          model: SolicitudDetalle,
+          attributes: ["idAnalisis"],
+          include: {
+            model: Analisys,
+            attributes: ["name"],
+            include: {
+              model: Categoria,
+              attributes: ["name"],
+            },
+          },
+        },
+      ],
+    });
+
+    if (!solicitud) {
+      return res.status(404).json({ status: false, message: 'Solicitud no encontrada' });
+    }
+    return res.json({ status: true, solicitud });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+

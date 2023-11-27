@@ -57,6 +57,11 @@ function TableRecepcionista({ data }) {
               <TableCell>
                 <ActionButton
                   style={{ backgroundColor: "blue", color: "white" }}
+                  onClick={() => {
+                    navigate(`/responsable/subir/${item.id}`, {
+                      state: item,
+                    });
+                  }}
                 >
                   Subir
                 </ActionButton>
