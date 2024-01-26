@@ -1,5 +1,8 @@
+const { generateJWT } = require("../helpers/token");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const Persona = require("../models/personaModel")
+
 
 module.exports.login = async (req, res, next) => {
   try {
@@ -11,17 +14,22 @@ module.exports.login = async (req, res, next) => {
     if (!isPasswordValid)
       return res.json({ msg: "Incorrect Username or Password", status: false });
     delete user.password;
-    return res.json({ status: true, user });
+    const access_token = generateJWT(user.id, user.idTipoUsuario);
+
+    return res.json({ status: true, user:{user, access_token} });
   } catch (ex) {
     next(ex);
   }
+};
+module.exports.getMe = async (req, res) => {
+  const { user } = req;
+  return res.status(200).json(user);
 };
 
 module.exports.register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
-    // Verifica si ya existe un usuario con el mismo nombre de usuario
     const usernameCheck = await User.findOne({
       where: { username: username },
     });
@@ -30,7 +38,6 @@ module.exports.register = async (req, res, next) => {
       return res.json({ msg: "Username already used", status: false });
     }
 
-    // Verifica si ya existe un usuario con la misma dirección de correo electrónico
     const emailCheck = await User.findOne({
       where: { email: email },
     });
@@ -39,7 +46,6 @@ module.exports.register = async (req, res, next) => {
       return res.json({ msg: "Email already used", status: false });
     }
 
-    // Si no hay duplicados, hashea la contraseña y crea el usuario
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       email: email,
@@ -47,15 +53,31 @@ module.exports.register = async (req, res, next) => {
       password: hashedPassword,
       estado: 1,
       idPersona: 41,
-      idTipoUsuario: 1,
+      idTipoUsuario: 5,
     });
 
-    // Elimina la contraseña del usuario antes de enviar la respuesta
     delete newUser.dataValues.password;
+    const access_token = generateJWT(newUser.id);
 
-    return res.json({ status: true, user: newUser });
+    return res.json({ status: true, user: { newUser, access_token } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+module.exports.getResponsable = async (req, res, next) => {
+  try {
+    const responsables = await User.findAll({
+      where: { idTipoUsuario: 6 }, 
+      include: [
+        {
+          model: Persona,
+        },
+      ],
+    });
+    res.json(responsables);
+  } catch (error) {
+    next(error);
+  }
+};
+

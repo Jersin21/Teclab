@@ -49,6 +49,14 @@ const Table = ({ data }) => {
     theme: "dark",
   };
 
+  const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
+
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }
   return (
     <TableContainer>
       <ActionButton
@@ -91,7 +99,7 @@ const Table = ({ data }) => {
                   onClick={async () => {
                     try {
                       const { data } = await axios.delete(
-                        analisysRoute + "/" + item.id
+                        analisysRoute + "/" + item.id,config
                       );
                       if (data.status === false) {
                         toast.error("No se pudo eliminar", toastOptions);

@@ -6,18 +6,20 @@ import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { loginRoute } from "../utils/APIroute";
+import useAuth from "../hooks/authHooks";
 
 function Login() {
   const navigate = useNavigate();
+  const { auth } = useAuth();
   const [values, setValues] = useState({
     username: "",
     password: "",
   });
   useEffect(() => {
-    if (localStorage.getItem("LabUser")) {
+    if (auth.idTipoUsuario) {
       navigate("/");
     }
-  }, []);
+  }, [auth, navigate]);
   const toastOptions = {
     position: "top-right",
     hideProgressBar: true,
@@ -28,6 +30,7 @@ function Login() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (handleValidation()) {
       const { username, password } = values;
       const { data } = await axios.post(loginRoute, {
@@ -37,9 +40,12 @@ function Login() {
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       }
+
       if (data.status === true) {
-        localStorage.setItem("LabUser", JSON.stringify(data.user));
+        localStorage.setItem("token", JSON.stringify(data.user.access_token));
         navigate("/");
+
+        window.location.reload();
       }
     }
   };
@@ -67,7 +73,7 @@ function Login() {
         >
           <div className="brand">
             <img src={Logo} alt="Logo" />
-            <h1>Santa Fe</h1>
+            <h1>Teclab</h1>
           </div>
           <input
             type="text"

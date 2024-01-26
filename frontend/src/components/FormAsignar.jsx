@@ -14,17 +14,20 @@ const FormContainer = styled.div`
 const FormAsignar = () => {
   const params = useParams();
   const navigate = useNavigate();
-
+  const token = localStorage.getItem('token')?.replace(/^"(.*)"$/, '$1');
+  const config = {headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  }}
   const [medicos, setMedicos] = useState([]);
   const [medicoSeleccionado, setMedicoSeleccionado] = useState("");
 
   useEffect(() => {
     const fetchMedicos = async () => {
       try {
-        const response = await axios.get(medicoRoute);
+        const response = await axios.get(medicoRoute,config);
         const medicos = response.data;
         setMedicos(medicos);
-        console.log(medicos)
       } catch (error) {
         console.error(error);
       }
@@ -37,7 +40,7 @@ const FormAsignar = () => {
     e.preventDefault();
     const { data } = await axios.put(`${recepcionistaRoute}/${params.id}`, {
       idUsuarioLab: medicoSeleccionado,
-    });
+    },config);
     e.target.reset();
     navigate("/recepcionista");
   };
@@ -50,15 +53,16 @@ const FormAsignar = () => {
         <h1>Asignar médico</h1>
         <form onSubmit={handleSubmit}>
           <select
+          key="default"
             name=""
             onChange={(e) => {
               setMedicoSeleccionado(e.target.value);
             }}
           >
-            <option value="">Seleccione un responsable</option>
+            <option key="default" value="" >Seleccione un responsable</option>
             {medicos.map((medicos) => (
-              <option id={medicos.id} value={medicos.User.id}>
-                {medicos.User.persona.nombre} {medicos.User.persona.apellidos}
+              <option id={medicos.id} value={medicos.id}>
+                {medicos.persona.nombre} {medicos.persona.apellidos}
               </option>
             ))}
           </select>

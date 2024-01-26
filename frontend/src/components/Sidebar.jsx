@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 import { useState } from "react";
 import Logout from "./Logout";
+import useAuth from "../hooks/authHooks";
 
 const SidebarContainer = styled.div`
   position: fixed;
@@ -40,7 +41,6 @@ const SidebarMenu = styled.ul`
   list-style: none;
   padding: 0;
   margin: 20px 0;
-  
 `;
 
 const SidebarMenuItem = styled.li`
@@ -48,7 +48,7 @@ const SidebarMenuItem = styled.li`
   margin: 5px 10px 5px 10px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
-  background-color: ${({ isActive }) => (isActive ? '#4e0eff' : 'transparent')};
+  background-color: ${({ isActive }) => (isActive ? "#4e0eff" : "transparent")};
   border-radius: 10px;
   border: 2px solid white;
   display: flex;
@@ -56,56 +56,53 @@ const SidebarMenuItem = styled.li`
 
   &:hover {
     background-color: ${({ isActive }) =>
-      isActive ? '#4e0eff' : 'rgba(255, 255, 255, 0.1)'};
+      isActive ? "#4e0eff" : "rgba(255, 255, 255, 0.1)"};
   }
 
   a {
-    color: ${({ isActive }) => (isActive ? 'white' : 'inherit')};
+    color: ${({ isActive }) => (isActive ? "white" : "inherit")};
     text-decoration: none;
     font-weight: bold;
     width: 100%;
   }
 `;
 
-
-
-
 const Sidebar = ({ isOpen }) => {
-    const [activeItem, setActiveItem] = useState(null);
-  
-    const handleItemClick = (item) => {
-      setActiveItem(item);
-    };
-  
-    return (
-      <SidebarContainer isOpen={isOpen}>
-        <SidebarHeader>
-          <img src={Logo} alt="Logo" />
-          <SidebarTitle>Santa Fe</SidebarTitle>
-        </SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem
-            onClick={() => handleItemClick('Doctores')}
-            isActive={activeItem === 'Doctores'}
-          >
-            Doctores
-          </SidebarMenuItem>
-          <SidebarMenuItem
-            onClick={() => handleItemClick('Análisis')}
-            isActive={activeItem === 'Análisis'}
-          >
-            Análisis
-          </SidebarMenuItem>
-          <SidebarMenuItem
-            onClick={() => handleItemClick('Reportes')}
-            isActive={activeItem === 'Reportes'}
-          >
-            Reportes
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarContainer>
-    );
+  const [activeItem, setActiveItem] = useState(null);
+  const { auth } = useAuth();
+  const handleItemClick = (item) => {
+    setActiveItem(item);
   };
-  
 
+  return (
+    <SidebarContainer isOpen={isOpen}>
+      <SidebarHeader>
+        <img src={Logo} alt="Logo" />
+        <SidebarTitle>Santa Fe</SidebarTitle>
+      </SidebarHeader>
+      <SidebarMenu>
+        <SidebarMenuItem
+          onClick={() => handleItemClick("Doctores")}
+          isActive={activeItem === "Doctores"}
+        >
+          Doctores
+        </SidebarMenuItem>
+        <SidebarMenuItem
+          onClick={() => handleItemClick("Análisis")}
+          isActive={activeItem === "Análisis"}
+        >
+          Análisis
+        </SidebarMenuItem>
+        <SidebarMenuItem
+          onClick={() => handleItemClick("Reportes")}
+          isActive={activeItem === "Reportes"}
+        >
+          Reportes
+        </SidebarMenuItem>
+      </SidebarMenu>
+      <Logout />
+      <h1>Hola {auth.username}</h1>
+    </SidebarContainer>
+  );
+};
 export default Sidebar;

@@ -17,7 +17,7 @@ const FormContainer = styled.div`
 function FormAnalisys() {
   const [name, setName] = useState("");
   const [tipo, setTipo] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [data, setData] = useState([]);
   const [descripcion, setDescripcion] = useState("");
   const [selectedAnalisis, setSelectedAnalisis] = useState([]);
@@ -33,17 +33,27 @@ function FormAnalisys() {
     autoClose: 3000,
     theme: "dark",
   };
+  const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
 
   const handlesubmit = async (e) => {
     e.preventDefault();
     if (!params.id) {
-      const { data } = await axios.post(analisysRoute, {
-        name,
-        tipo,
-        date,
-        descripcion,
-        idAnalisis: selectedAnalisis,
-      });
+      const { data } = await axios.post(
+        analisysRoute,
+        {
+          name,
+          tipo,
+          date,
+          descripcion,
+          idAnalisis: selectedAnalisis,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (data.status == false) {
         toast.error(data.msg, toastOptions);
       }
@@ -51,16 +61,26 @@ function FormAnalisys() {
         toast.success("Se creo la sollicitud", toastOptions);
       }
     } else {
-      await axios.put(analisysRoute + "/" + params.id, {
-        name,
-        tipo,
-        date,
-        descripcion,
-        idAnalisis: selectedAnalisis,
-      });
+      await axios.put(
+        analisysRoute + "/" + params.id,
+        {
+          name,
+          tipo,
+          date,
+          descripcion,
+          idAnalisis: selectedAnalisis,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(selectedAnalisis);
     }
     e.target.reset();
-    navigate("/");
+    navigate("/medico");
   };
 
   useEffect(() => {
@@ -68,15 +88,30 @@ function FormAnalisys() {
       fectTask();
     }
     async function fectTask() {
-      const res = await axios.get(analisysRoute + "/" + params.id);
+      const res = await axios.get(analisysRoute + "/" + params.id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setName(res.data.paciente);
       setDescripcion(res.data.observaciones);
       setDate(res.data.fecha);
       setTipo(res.data.muestra);
+      const analisisSeleccionados = res.data.solicituddetalles.map(
+        (detalle) => detalle.idAnalisis
+      );
+
+      setSelectedAnalisis(analisisSeleccionados);
+      console.log(res.data);
     }
     async function getAnalisys() {
-      const res = await axios.get(tipoanalisysRoute);
-      console.log(data);
+      const res = await axios.get(tipoanalisysRoute, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setData(res.data);
     }
     getAnalisys();
@@ -121,7 +156,7 @@ function FormAnalisys() {
         />
         <RadioButtonsContainer
           datos={data}
-          selectedAnalisis={selectedAnalisis}
+          selectedAnalisisIds={selectedAnalisis}
           setSelectedAnalisis={setSelectedAnalisis}
         />
 

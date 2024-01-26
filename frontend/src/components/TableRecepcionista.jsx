@@ -7,7 +7,12 @@ const TableWrapper = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
 `;
-
+const NoData = styled.div`
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  text-align: center;
+`;
 const TableHead = styled.thead`
   background-color: #25136a;
   color: white;
@@ -32,8 +37,16 @@ const ActionButton = styled.button`
   cursor: pointer;
 `;
 
-function TableRecepcionista({ data }) {
+function TableRecepcionista({ data },{config}) {
   const navigate = useNavigate();
+
+  if (data.length === 0) {
+    return (
+      <TableContainer>
+      <NoData>No hay solicitudes por asignar</NoData>
+    </TableContainer>
+    )
+ }
   return (
     <TableContainer>
       <TableWrapper>
@@ -69,7 +82,6 @@ function TableRecepcionista({ data }) {
           ))}
         </TableBody>
       </TableWrapper>
-      {/* <ToastContainer/> */}
     </TableContainer>
   );
 }

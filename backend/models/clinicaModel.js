@@ -14,7 +14,7 @@ const Clinica = bd.define(
       allowNull: false,
       unique: true,
     },
-    dirrecion: {
+    direccion: {
       type: DataTypes.STRING,
       allowNull: false,
     },

@@ -1,15 +1,19 @@
 import React from "react";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/authHooks";
 
 function Logout() {
   const navigate = useNavigate();
-  if (!localStorage) {
-    navigate("/");
-  }
+  const { setAuth } = useAuth();
+  const handleLogout = () => {
+    setAuth({});
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
     <>
-      <button> Cerrar sesion</button>
+      <button onClick={handleLogout}>Cerrar sesión</button>
     </>
   );
 }

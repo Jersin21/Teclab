@@ -8,3 +8,5 @@ export const tipoanalisysRoute = `${host}/api/auth/tipoanalisys`;
 export const medicoRoute = `${host}/api/auth/medicos`;
 export const recepcionistaRoute = `${host}/api/auth/recepcionista`;
 export const responsableRoute = `${host}/api/auth/responsable`;
+export const getMeRoute = `${host}/api/auth/me`;
+export const centerRoute = `${host}/api/auth/registerCenter`

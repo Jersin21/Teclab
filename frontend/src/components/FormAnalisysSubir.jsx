@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
 const ImagePreview = styled.img`
   max-width: 100%;
   max-height: 200px;
@@ -29,6 +36,7 @@ const AnalysisForm = ({ category, analysis }) => {
       ...prevPreviewImages,
       ...selectedPreviewImages,
     ]);
+    console.log(selectedImages)
   };
 
   const handleRemoveImage = (index) => {
@@ -42,19 +50,15 @@ const AnalysisForm = ({ category, analysis }) => {
     setPreviewImages(updatedPreviewImages);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Lógica para enviar el formulario, puedes agregarla aquí
-    console.log("Imágenes a subir:", images);
-  };
+  
 
   return (
-    <div>
-      <h2>{category}</h2>
-      <label htmlFor="resultado">{analysis.analisis.name}: </label>
+    <Form >
+      <h2>{category} </h2>
+      <label htmlFor={`resultado-${analysis.analisis.id}`}>{analysis.analisis.name}: </label>
       <textarea
-        id=""
-        name=""
+        id={`resultado-${analysis.analisis.id}`}
+        name={`resultado-${analysis.analisis.id}`}
         value={resultado}
         onChange={(e) => setResultado(e.target.value)}
         required
@@ -65,10 +69,7 @@ const AnalysisForm = ({ category, analysis }) => {
         multiple
         onChange={handleImageChange}
       />
-      <button type="submit" onClick={handleSubmit}>
-        Subir Resultado
-      </button>
-      {/* Vista previa de imágenes */}
+      
       {previewImages.map((preview, index) => (
         <div key={index}>
           <ImagePreview src={preview} alt={`Preview ${index}`} />
@@ -77,7 +78,7 @@ const AnalysisForm = ({ category, analysis }) => {
           </RemoveButton>
         </div>
       ))}
-    </div>
+    </Form>
   );
 };
 

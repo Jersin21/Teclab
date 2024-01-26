@@ -4,10 +4,23 @@ const Image = require("../models/imageModel");
 const Resultado = require("../models/resultadoModel");
 const Analisys = require("../models/tipoanalisysModel");
 const Categoria = require("../models/categoriaModel");
+const {Op} = require("sequelize")
+
 
 module.exports.solicitudes = async (req, res, next) => {
   try {
-    const solicitudes = await Solicitud.findAll();
+   
+    const userId = req.user.id; 
+
+    const solicitudes = await Solicitud.findAll({
+      where: {
+        estado: {
+          [Op.or]: ["Iniciado", "Pendiente", "Completado"]
+        },
+        idUsuarioMedico: userId
+      }
+    });
+
     res.json(solicitudes);
   } catch (ex) {
     next(ex);
@@ -16,7 +29,14 @@ module.exports.solicitudes = async (req, res, next) => {
 module.exports.solicitud = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const solicitud = await Solicitud.findOne({ where: { id: id } });
+    const solicitud = await Solicitud.findOne({ where: { id: id },
+      include:[{
+        model:SolicitudDetalle,
+        attributes:["idAnalisis"]
+      }]
+     });
+
+
     res.json(solicitud);
   } catch (ex) {
     next(ex);
@@ -32,7 +52,7 @@ module.exports.registerAnalisys = async (req, res, next) => {
       muestra: tipo,
       observaciones: descripcion,
       estado: "Iniciado",
-      idUsuarioMedico: 13,
+      idUsuarioMedico: req.user.id,
     });
     for (const id of idAnalisis) {
       await SolicitudDetalle.create({
@@ -102,18 +122,26 @@ module.exports.asignarResponsable = async (req, res, next) => {
 };
 
 module.exports.deleteAnalisys = async (req, res, next) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
+    await SolicitudDetalle.destroy({ where: { idSolicitud: id } });
+
     const solicitud = await Solicitud.destroy({ where: { id } });
+
     return res.json({ status: true, solicitud });
   } catch (error) {
+    console.error('Error al eliminar:', error);
     return res.json({ msg: error, status: false });
   }
 };
 module.exports.getSolicitudRecepcionista = async (req, res, next) => {
   try {
     const SolicitudRecepcionista = await Solicitud.findAll({
-      where: { estado: "Iniciado" },
+      where: {
+        estado: "Iniciado",
+        idUsuarioLab: { [Op.is]: null }
+      },
     });
     res.json(SolicitudRecepcionista);
   } catch (error) {
@@ -123,8 +151,9 @@ module.exports.getSolicitudRecepcionista = async (req, res, next) => {
 
 module.exports.getSolicitudResponsable = async (req, res, next) => {
   try {
+    const idUsuarioLab = req.user.id
     const SolicitudResponsable = await Solicitud.findAll({
-      where: { estado: "Pendiente" },
+      where: { estado: "Pendiente", idUsuarioLab },
     });
     res.json(SolicitudResponsable);
   } catch (error) {
@@ -133,23 +162,28 @@ module.exports.getSolicitudResponsable = async (req, res, next) => {
 };
 module.exports.subirResultado = async (req, res, next) => {
   try {
-    const { id, image_path, detalle, fecha } = req.body;
+    const {id, resultado, images,iddetalle } = req.body;
 
     const solicitud = await Solicitud.findByPk(id);
-    const subirRes = solicitud.update({
+    const subirRes = await solicitud.update({
       estado: "Completado",
     });
 
     await Image.create({
-      image_path,
-      idSolicitudDetalle,
+      image_path : images,
+      idSolicitudDetalle: 7,
     });
     await Resultado.create({
-      detalle,
-      fecha,
-      idSolicitudDetalle,
+      detalle: resultado,
+      fecha :"2222-22-22",
+      idSolicitudDetalle: 7,
     });
-
+    for (const id of iddetalle) {
+      await SolicitudDetalle.create({
+        idSolicitud: newAnalisys.id,
+        idAnalisis: id,
+      });
+    }
     return res.json({ status: true, subirRes });
   } catch (error) {
     console.error(error);
@@ -163,7 +197,7 @@ module.exports.getAnalisys = async (req, res, next) => {
       include: [
         {
           model: SolicitudDetalle,
-          attributes: ["idAnalisis"],
+          attributes: ["idAnalisis","id"],
           include: {
             model: Analisys,
             attributes: ["name"],
@@ -177,7 +211,9 @@ module.exports.getAnalisys = async (req, res, next) => {
     });
 
     if (!solicitud) {
-      return res.status(404).json({ status: false, message: 'Solicitud no encontrada' });
+      return res
+        .status(404)
+        .json({ status: false, message: "Solicitud no encontrada" });
     }
     return res.json({ status: true, solicitud });
   } catch (error) {
@@ -185,4 +221,3 @@ module.exports.getAnalisys = async (req, res, next) => {
     next(error);
   }
 };
-

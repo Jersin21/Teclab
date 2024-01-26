@@ -1,53 +1,58 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import TableResponsable from "../components/TableResponsable";
-import axios from "axios";
-import {
-  analisysRoute,
-  medicoRoute,
-  responsableRoute,
-} from "../utils/APIroute";
 import styled from "styled-components";
+import Sidebar from "../components/Sidebar";
+import Table from "../components/Table";
+import { analisysRoute } from "../utils/APIroute";
+import axios from "axios";
 import useAuth from "../hooks/authHooks";
 import { useNavigate } from "react-router-dom";
 
-function ResponsablePage() {
+const MedicoPage = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
+
   const {
     auth: { idTipoUsuario },
   } = useAuth();
   const [data, setData] = useState([]);
-  if (idTipoUsuario !== 6) {
+  if (idTipoUsuario !== 5) {
     navigate("/");
   }
+
   useEffect(() => {
+    const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
     if (!token) {
       navigate("/login");
-    } 
-    async function fectData() {
-      const res = await axios.get(responsableRoute, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setData(res.data);
     }
-    fectData();
-  }, []);
+
+    async function fetchData() {
+      try {
+        const response = await axios.get(analisysRoute, config);
+        setData(response.data);
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    }
+    fetchData();
+  }, [idTipoUsuario, navigate]);
 
   return (
     <HomepageContainer>
       <Sidebar />
       <ContentContainer>
         <TableContainer>
-          <TableResponsable data={data} />
+          <Table data={data} />
         </TableContainer>
       </ContentContainer>
     </HomepageContainer>
   );
-}
+};
 const HomepageContainer = styled.div`
   display: flex;
   height: 100vh; /* Altura total de la ventana */
@@ -71,4 +76,4 @@ const TableContainer = styled.div`
   border-radius: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); // Agrega sombra si lo deseas
 `;
-export default ResponsablePage;
+export default MedicoPage;

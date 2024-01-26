@@ -13,6 +13,12 @@ const FormContainer = styled.div`
 
 
 function FormResponsable() {
+  const token = localStorage.getItem('token')?.replace(/^"(.*)"$/, '$1');
+
+  const config ={headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  }}
   const [name, setName] = useState("");
   const [tipo, setTipo] = useState("");
   const [date, setDate] = useState("");
@@ -40,7 +46,7 @@ function FormResponsable() {
         tipo,
         date,
         descripcion,
-      });
+      },config);
       if (data.status == false) {
         toast.error(data.msg, toastOptions);
       }
@@ -53,7 +59,7 @@ function FormResponsable() {
         tipo,
         date,
         descripcion,
-      });
+      },config);
       // if (data.status == false) {
       //   toast.error(data.msg, toastOptions);
       // }
@@ -70,14 +76,14 @@ function FormResponsable() {
       fectTask();
     }
     async function fectTask() {
-      const res = await axios.get(analisysRoute + "/" + params.id);
+      const res = await axios.get(analisysRoute + "/" + params.id,config);
       setName(res.data.paciente);
       setDescripcion(res.data.observaciones);
       setDate(res.data.fecha);
       setTipo(res.data.muestra);
     }
     async function getAnalisys() {
-      const res = await axios.get(tipoanalisysRoute);
+      const res = await axios.get(tipoanalisysRoute,config);
       setData(res.data);
     }
     getAnalisys();

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 
 const RadioButtonsContainer = ({
   datos,
-  selectedAnalisis,
-  setSelectedAnalisis,
+  selectedAnalisisIds,
+  setSelectedAnalisis,  
 }) => {
   const [categoriasConAnalisis, setCategoriasConAnalisis] = useState({});
 
@@ -34,8 +34,8 @@ const RadioButtonsContainer = ({
         return [...prevSelected, idAnalisis];
       }
     });
-    console.log(selectedAnalisis)
   };
+
   return (
     <div>
       {Object.keys(categoriasConAnalisis).map((categoriaNombre, index) => (
@@ -49,6 +49,7 @@ const RadioButtonsContainer = ({
                   type="checkbox"
                   value={analisis.id}
                   id={analisis.id}
+                  checked={selectedAnalisisIds.includes(analisis.id)}
                 />
                 {analisis.name}
               </label>

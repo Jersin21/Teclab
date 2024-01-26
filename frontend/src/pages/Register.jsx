@@ -16,7 +16,7 @@ function Register() {
     confirmPassword: "",
   });
   useEffect(()=>{
-    if(localStorage.getItem("LabUser")){
+    if(localStorage.getItem('token')){
       navigate("/")
     }
   },[])
@@ -41,8 +41,10 @@ function Register() {
           toast.error(data.msg, toastOptions)
         }
         if(data.status === true){
-          localStorage.setItem("LabUser",JSON.stringify(data.user))
+          localStorage.setItem('token',JSON.stringify(data.user.access_token))
           navigate("/")
+          window.location.reload();
+
         }
     }
   };

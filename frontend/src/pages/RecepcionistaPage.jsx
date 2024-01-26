@@ -4,22 +4,44 @@ import TableRecepcionista from "../components/TableRecepcionista";
 import axios from "axios";
 import { analisysRoute, recepcionistaRoute } from "../utils/APIroute";
 import styled from "styled-components";
+import useAuth from "../hooks/authHooks";
+import { useNavigate } from "react-router-dom";
 
 function RecepcionistaPage() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
+  const {
+    auth: { idTipoUsuario, isLoading },
+  } = useAuth();
+
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
   const [data, setData] = useState([]);
+
+  if (idTipoUsuario !== 7) {
+    navigate("/");
+  }
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
     async function fectData() {
-      const res = await axios.get(recepcionistaRoute);
+      const res = await axios.get(recepcionistaRoute, config);
       setData(res.data);
     }
     fectData();
-  }, []);
+  }, [idTipoUsuario, isLoading, navigate]);
+
   return (
     <HomepageContainer>
       <Sidebar />
       <ContentContainer>
         <TableContainer>
-          <TableRecepcionista data={data} />
+          <TableRecepcionista data={data} config={config} />
         </TableContainer>
       </ContentContainer>
     </HomepageContainer>
