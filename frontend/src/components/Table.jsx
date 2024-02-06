@@ -6,7 +6,6 @@ import { analisysRoute } from "../utils/APIroute";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Estilos para la tabla
 const TableWrapper = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -16,10 +15,19 @@ const TableWrapper = styled.table`
 const TableHead = styled.thead`
   background-color: #25136a;
   color: white;
+
+  th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-weight: bold;
+    text-align: left;
+  }
 `;
+
 const TableContainer = styled.div`
   margin-left: 250px; /* Ancho del Sidebar */
 `;
+
 const TableBody = styled.tbody``;
 
 const TableRow = styled.tr``;
@@ -28,13 +36,40 @@ const TableCell = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
   color: white;
+
+  &:last-child {
+    width: 300px; /* Ajusta el ancho de la última columna (acciones) según tus necesidades */
+  }
 `;
 
 const ActionButton = styled.button`
   margin-right: 5px;
-  padding: 5px 10px;
+  padding: 8px 12px;
   border: none;
   cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #4caf50; /* Cambia el color al pasar el ratón */
+  }
+`;
+
+const EditButton = styled(ActionButton)`
+  background-color: #3498db;
+`;
+
+const DeleteButton = styled(ActionButton)`
+  background-color: #e74c3c;
+`;
+
+const ViewButton = styled(ActionButton)`
+  background-color: #2ecc71;
+`;
+
+const CreateButton = styled(ActionButton)`
+  background-color: #27ae60;
 `;
 
 const Table = ({ data }) => {
@@ -56,26 +91,26 @@ const Table = ({ data }) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  }
+  };
+
   return (
     <TableContainer>
-      <ActionButton
+      <CreateButton
         onClick={() => {
           navigate("/analisys");
         }}
-        style={{ backgroundColor: "green", color: "white" }}
       >
         CREAR
-      </ActionButton>
+      </CreateButton>
 
       <TableWrapper>
         <TableHead>
           <TableRow>
-            <TableCell>Nombre</TableCell>
-            <TableCell>Fecha</TableCell>
-            <TableCell>Tipo de muestra</TableCell>
-            <TableCell>Estado</TableCell>
-            <TableCell>Acciones</TableCell>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Tipo de muestra</th>
+            <th>Estado</th>
+            <th>Acciones</th>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -86,26 +121,28 @@ const Table = ({ data }) => {
               <TableCell>{item.muestra}</TableCell>
               <TableCell>{item.estado}</TableCell>
               <TableCell>
-                <ActionButton
-                  style={{ backgroundColor: "blue", color: "white" }}
+                <EditButton
                   onClick={() => {
                     navigate("/analisys/" + item.id);
                   }}
                 >
                   Editar
-                </ActionButton>
-                <ActionButton
-                  style={{ backgroundColor: "red", color: "white" }}
+                </EditButton>
+                <DeleteButton
                   onClick={async () => {
                     try {
                       const { data } = await axios.delete(
-                        analisysRoute + "/" + item.id,config
+                        analisysRoute + "/" + item.id,
+                        config
                       );
                       if (data.status === false) {
                         toast.error("No se pudo eliminar", toastOptions);
                       }
                       if (data.status === true) {
-                        toast.success("Se Elinmino", toastOptions);
+                        toast.success("Se eliminó", toastOptions);
+                        setTimeout(() => {
+                          window.location.reload();
+                        }, 500);
                       }
                     } catch (error) {
                       console.log(error);
@@ -113,12 +150,14 @@ const Table = ({ data }) => {
                   }}
                 >
                   Eliminar
-                </ActionButton>
-                <ActionButton
-                  style={{ backgroundColor: "green", color: "white" }}
+                </DeleteButton>
+                <ViewButton
+                  onClick={() => {
+                    navigate("/analisysVer/ver/" + item.id);
+                  }}
                 >
                   Visualizar
-                </ActionButton>
+                </ViewButton>
               </TableCell>
             </TableRow>
           ))}

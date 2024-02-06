@@ -31,6 +31,6 @@ const Resultado = bd.define(
   }
 );
 
-Resultado.belongsTo(SolicitudDetalle, { foreignKey: 'idSolicitudDetalle'});
-
+/* Resultado.belongsTo(SolicitudDetalle, { foreignKey: 'idSolicitudDetalle',targetKey: 'id'});
+ */
 module.exports = Resultado;

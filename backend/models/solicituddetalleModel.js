@@ -2,6 +2,8 @@ const { DataTypes } = require("sequelize");
 const bd = require("../db/db");
 const Solicitud = require("./analisysModel");
 const Analisys = require("./tipoanalisysModel");
+const Image = require("./imageModel");
+const Resultado = require("./resultadoModel");
 
 const SolicitudDetalle = bd.define(
   "solicituddetalle",
@@ -35,5 +37,8 @@ const SolicitudDetalle = bd.define(
 );
 
 SolicitudDetalle.belongsTo(Analisys, { foreignKey: "idAnalisis" });
+SolicitudDetalle.hasOne(Resultado, { foreignKey: 'idSolicitudDetalle' });
+SolicitudDetalle.hasMany(Image, { foreignKey: 'idSolicitudDetalle' });
+
 
 module.exports = SolicitudDetalle;

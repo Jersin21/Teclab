@@ -7,19 +7,30 @@ const TableWrapper = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
 `;
+
 const NoData = styled.div`
   padding: 20px;
   background-color: #f2f2f2;
   border: 1px solid #ddd;
   text-align: center;
+  color: #333; /* Cambia el color del texto según tu preferencia */
 `;
+
 const TableHead = styled.thead`
-  background-color: #25136a;
   color: white;
+
+  th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-weight: bold;
+    text-align: left;
+  }
 `;
+
 const TableContainer = styled.div`
   margin-left: 250px; /* Ancho del Sidebar */
 `;
+
 const TableBody = styled.tbody``;
 
 const TableRow = styled.tr``;
@@ -27,7 +38,11 @@ const TableRow = styled.tr``;
 const TableCell = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
-  color: white;
+  color: white; /* Cambia el color del texto según tu preferencia */
+
+  &:last-child {
+    width: 150px; /* Ajusta el ancho de la última columna (acciones) según tus necesidades */
+  }
 `;
 
 const ActionButton = styled.button`
@@ -35,28 +50,32 @@ const ActionButton = styled.button`
   padding: 5px 10px;
   border: none;
   cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #2980b9;
+  }
 `;
 
-function TableRecepcionista({ data },{config}) {
+function TableRecepcionista({ data }) {
   const navigate = useNavigate();
 
   if (data.length === 0) {
-    return (
-      <TableContainer>
-      <NoData>No hay solicitudes por asignar</NoData>
-    </TableContainer>
-    )
- }
+    return <NoData>No hay solicitudes por asignar</NoData>;
+  }
+
   return (
     <TableContainer>
       <TableWrapper>
         <TableHead>
           <TableRow>
-            <TableCell>Nombre</TableCell>
-            <TableCell>Fecha</TableCell>
-            <TableCell>Tipo de muestra</TableCell>
-            <TableCell>Estado</TableCell>
-            <TableCell>Acciones</TableCell>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Tipo de muestra</th>
+            <th>Estado</th>
+            <th>Acciones</th>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -68,7 +87,6 @@ function TableRecepcionista({ data },{config}) {
               <TableCell>{item.estado}</TableCell>
               <TableCell>
                 <ActionButton
-                  style={{ backgroundColor: "blue", color: "white" }}
                   onClick={() => {
                     navigate(`/recepcionista/asignar/${item.id}`, {
                       state: item,

@@ -1,5 +1,6 @@
 # Dependencias
 /node_modules
+/images
 
 # Archivos de configuración locales
 .env

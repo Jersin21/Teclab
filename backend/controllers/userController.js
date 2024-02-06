@@ -1,12 +1,12 @@
 const { generateJWT } = require("../helpers/token");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const Persona = require("../models/personaModel")
-
+const Persona = require("../models/personaModel");
 
 module.exports.login = async (req, res, next) => {
+  const { password, username } = req.body;
+ 
   try {
-    const { username, password } = req.body;
     const user = await User.findOne({ where: { username: username } });
     if (!user)
       return res.json({ msg: "Incorrect Username or Password", status: false });
@@ -14,9 +14,13 @@ module.exports.login = async (req, res, next) => {
     if (!isPasswordValid)
       return res.json({ msg: "Incorrect Username or Password", status: false });
     delete user.password;
-    const access_token = generateJWT(user.id, user.idTipoUsuario);
+    const access_token = generateJWT(
+      user.id,
+      user.idTipoUsuario,
+      user.idClinica
+    );
 
-    return res.json({ status: true, user:{user, access_token} });
+    return res.json({ status: true, user: { user, access_token } });
   } catch (ex) {
     next(ex);
   }
@@ -52,8 +56,8 @@ module.exports.register = async (req, res, next) => {
       username: username,
       password: hashedPassword,
       estado: 1,
-      idPersona: 41,
-      idTipoUsuario: 5,
+      idPersona: 40,
+      idTipoUsuario: 6,
     });
 
     delete newUser.dataValues.password;
@@ -68,7 +72,7 @@ module.exports.register = async (req, res, next) => {
 module.exports.getResponsable = async (req, res, next) => {
   try {
     const responsables = await User.findAll({
-      where: { idTipoUsuario: 6 }, 
+      where: { idTipoUsuario: 6 },
       include: [
         {
           model: Persona,
@@ -80,4 +84,3 @@ module.exports.getResponsable = async (req, res, next) => {
     next(error);
   }
 };
-

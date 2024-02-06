@@ -40,6 +40,10 @@ const User = bd.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    idClinica: {
+      type: DataTypes.INTEGER,
+      allowNull: false, 
+    },
   },
   {
     timestamps: false,

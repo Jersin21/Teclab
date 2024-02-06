@@ -1,9 +1,43 @@
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+
+const Container = styled.div`
+  margin-top: 20px;
+  height: 100vh;
+`;
+
+const CategoryTitle = styled.h3`
+  margin-top: 20px;
+  text-align: left; /* Alineado a la izquierda */
+  color: #fff;
+`;
+
+const CheckboxRow = styled.div`
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Cambiado de flex-end a flex-start */
+`;
+
+
+const CheckboxInput = styled.input`
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-right: 8px;
+`;
+
+const CheckboxLabel = styled.label`
+  color: white;
+  cursor: pointer;
+`;
+
+
 
 const RadioButtonsContainer = ({
   datos,
   selectedAnalisisIds,
-  setSelectedAnalisis,  
+  setSelectedAnalisis,
 }) => {
   const [categoriasConAnalisis, setCategoriasConAnalisis] = useState({});
 
@@ -37,27 +71,32 @@ const RadioButtonsContainer = ({
   };
 
   return (
-    <div>
+    <Container>
       {Object.keys(categoriasConAnalisis).map((categoriaNombre, index) => (
         <div key={index}>
-          <h3>{categoriaNombre}</h3>
-          {categoriasConAnalisis[categoriaNombre].map(
-            (analisis, analisisIndex) => (
-              <label key={analisisIndex}>
-                <input
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  value={analisis.id}
-                  id={analisis.id}
-                  checked={selectedAnalisisIds.includes(analisis.id)}
-                />
-                {analisis.name}
-              </label>
-            )
-          )}
+          <CategoryTitle>{categoriaNombre}</CategoryTitle>
+          <CheckboxRow>
+            {categoriasConAnalisis[categoriaNombre].map(
+              (analisis, analisisIndex) => (
+                <div key={analisisIndex}>
+                  <CheckboxLabel htmlFor={analisis.id}>
+                    {analisis.name}
+                  </CheckboxLabel>
+                  <CheckboxInput
+                    onChange={handleCheckboxChange}
+                    type="checkbox"
+                    value={analisis.id}
+                    id={analisis.id}
+                    checked={selectedAnalisisIds.includes(analisis.id)}
+                  />
+                </div>
+              )
+            )}
+          </CheckboxRow>
         </div>
       ))}
-    </div>
+      
+    </Container>
   );
 };
 

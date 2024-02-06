@@ -14,16 +14,6 @@ const Persona = bd.define(
       allowNull: false,
       unique: true,
     },
-    apellidos: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    ci: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -36,10 +26,7 @@ const Persona = bd.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    direccion: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+   
   },
   {
     timestamps: false,

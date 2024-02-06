@@ -7,14 +7,29 @@ const TableWrapper = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
 `;
+const NoData = styled.div`
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  text-align: center;
+  color: #333; /* Cambia el color del texto según tu preferencia */
+`;
 
 const TableHead = styled.thead`
-  background-color: #25136a;
   color: white;
+
+  th {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-weight: bold;
+    text-align: left;
+  }
 `;
+
 const TableContainer = styled.div`
   margin-left: 250px; /* Ancho del Sidebar */
 `;
+
 const TableBody = styled.tbody``;
 
 const TableRow = styled.tr``;
@@ -30,21 +45,30 @@ const ActionButton = styled.button`
   padding: 5px 10px;
   border: none;
   cursor: pointer;
+  background-color: #3498db; /* Cambia el color del botón según tu preferencia */
+  color: white;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #2980b9; /* Cambia el color de fondo al pasar el ratón */
+  }
 `;
 
-function TableRecepcionista({ data }) {
+function TableResponsable({ data }) {
   const navigate = useNavigate();
-
+  if (data.length === 0) {
+    return <NoData>No hay solicitudes por asignar</NoData>;
+  }
   return (
     <TableContainer>
       <TableWrapper>
         <TableHead>
           <TableRow>
-            <TableCell>Nombre</TableCell>
-            <TableCell>Fecha</TableCell>
-            <TableCell>Tipo de muestra</TableCell>
-            <TableCell>Estado</TableCell>
-            <TableCell>Acciones</TableCell>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Tipo de muestra</th>
+            <th>Estado</th>
+            <th>Acciones</th>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -56,7 +80,6 @@ function TableRecepcionista({ data }) {
               <TableCell>{item.estado}</TableCell>
               <TableCell>
                 <ActionButton
-                  style={{ backgroundColor: "blue", color: "white" }}
                   onClick={() => {
                     navigate(`/responsable/subir/${item.id}`, {
                       state: item,
@@ -70,9 +93,8 @@ function TableRecepcionista({ data }) {
           ))}
         </TableBody>
       </TableWrapper>
-      {/* <ToastContainer/> */}
     </TableContainer>
   );
 }
 
-export default TableRecepcionista;
+export default TableResponsable;

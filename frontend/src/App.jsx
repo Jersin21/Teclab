@@ -8,6 +8,7 @@ import ResponsablePage from "./pages/ResponsablePage";
 import FormResponsable from "./components/FormResponsable";
 import FormAsignar from "./components/FormAsignar";
 import FormSubir from "./components/FormSubir";
+import FormVer from "./components/FormVer";
 import { AuthProvider } from "./provider/auth.provider";
 import RegisterDoctor from "./pages/registerDoctor";
 import RegisterCenter from "./pages/registerCenter";
@@ -33,6 +34,7 @@ function App() {
           <Route path="/recepcionista/asignar/:id" element={<FormAsignar />} />
           <Route path="/responsable" element={<ResponsablePage />} />
           <Route path="/responsable/subir/:id" element={<FormSubir />} />
+          <Route path="/analisysVer/ver/:id" element={<FormVer />} />
           <Route path="/registerDoctor" element={<RegisterDoctor />} />
           <Route path="/registerCenter" element={<RegisterCenter />} />
           <Route path="/admin" element={<RegisterCenter />} />

@@ -55,7 +55,6 @@ const HomepageContainer = styled.div`
   overflow-x: hidden;
 `;
 
-// Estilos para el contenido principal
 const ContentContainer = styled.div`
   flex-grow: 1; /* Hace que el contenido principal ocupe todo el espacio disponible */
   padding: 20px; /* Espaciado interior */

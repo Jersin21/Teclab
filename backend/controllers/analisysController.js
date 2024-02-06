@@ -4,21 +4,26 @@ const Image = require("../models/imageModel");
 const Resultado = require("../models/resultadoModel");
 const Analisys = require("../models/tipoanalisysModel");
 const Categoria = require("../models/categoriaModel");
-const {Op} = require("sequelize")
+const { Op } = require("sequelize");
+const fs = require("fs").promises;
+const path = require("path");
+const User = require("../models/userModel");
+const Clinica = require("../models/clinicaModel");
+const TipoUsuario = require("../models/tipousuarioModel");
+const Persona = require("../models/personaModel");
 
 
 module.exports.solicitudes = async (req, res, next) => {
   try {
-   
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     const solicitudes = await Solicitud.findAll({
       where: {
         estado: {
-          [Op.or]: ["Iniciado", "Pendiente", "Completado"]
+          [Op.or]: ["Iniciado", "Pendiente", "Completado"],
         },
-        idUsuarioMedico: userId
-      }
+        idUsuarioMedico: userId,
+      },
     });
 
     res.json(solicitudes);
@@ -29,13 +34,15 @@ module.exports.solicitudes = async (req, res, next) => {
 module.exports.solicitud = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const solicitud = await Solicitud.findOne({ where: { id: id },
-      include:[{
-        model:SolicitudDetalle,
-        attributes:["idAnalisis"]
-      }]
-     });
-
+    const solicitud = await Solicitud.findOne({
+      where: { id: id },
+      include: [
+        {
+          model: SolicitudDetalle,
+          attributes: ["idAnalisis"],
+        },
+      ],
+    });
 
     res.json(solicitud);
   } catch (ex) {
@@ -64,7 +71,7 @@ module.exports.registerAnalisys = async (req, res, next) => {
   } catch (error) {
     console.log(error);
 
-    return res.json({ msg: error, status: false });
+    return res.json({ status: false });
   }
 };
 module.exports.updateAnalisys = async (req, res, next) => {
@@ -131,7 +138,7 @@ module.exports.deleteAnalisys = async (req, res, next) => {
 
     return res.json({ status: true, solicitud });
   } catch (error) {
-    console.error('Error al eliminar:', error);
+    console.error("Error al eliminar:", error);
     return res.json({ msg: error, status: false });
   }
 };
@@ -140,18 +147,22 @@ module.exports.getSolicitudRecepcionista = async (req, res, next) => {
     const SolicitudRecepcionista = await Solicitud.findAll({
       where: {
         estado: "Iniciado",
-        idUsuarioLab: { [Op.is]: null }
+        idUsuarioLab: { [Op.is]: null },
       },
     });
+    const userdata = await User.findByPk("24")
+
+    console.log("userdata",userdata)
     res.json(SolicitudRecepcionista);
   } catch (error) {
+    console.error("este es el error", error)
     res.json({ msg: "No se pudo obtener los datos", status: false });
   }
 };
 
 module.exports.getSolicitudResponsable = async (req, res, next) => {
   try {
-    const idUsuarioLab = req.user.id
+    const idUsuarioLab = req.user.id;
     const SolicitudResponsable = await Solicitud.findAll({
       where: { estado: "Pendiente", idUsuarioLab },
     });
@@ -160,36 +171,59 @@ module.exports.getSolicitudResponsable = async (req, res, next) => {
     res.json({ msg: "No se pudo obtener los datos", status: false });
   }
 };
+
 module.exports.subirResultado = async (req, res, next) => {
+  const { results } = req.body;
+  const images = req.files;
+  const { id } = req.params;
   try {
-    const {id, resultado, images,iddetalle } = req.body;
-
     const solicitud = await Solicitud.findByPk(id);
-    const subirRes = await solicitud.update({
-      estado: "Completado",
-    });
-
-    await Image.create({
-      image_path : images,
-      idSolicitudDetalle: 7,
-    });
-    await Resultado.create({
-      detalle: resultado,
-      fecha :"2222-22-22",
-      idSolicitudDetalle: 7,
-    });
-    for (const id of iddetalle) {
-      await SolicitudDetalle.create({
-        idSolicitud: newAnalisys.id,
-        idAnalisis: id,
+    if (solicitud) {
+      await solicitud.update({
+        estado: "Completado",
       });
     }
-    return res.json({ status: true, subirRes });
+    const resultadosPromises = JSON.parse(results).map(async (result) => {
+      const fechaActual = new Date();
+      const today = `${fechaActual.getFullYear()}-${(fechaActual.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${fechaActual
+        .getDate()
+        .toString()
+        .padStart(2, "0")}`;
+      const resultado = await Resultado.create({
+        fecha: today,
+        detalle: result.value,
+        idSolicitudDetalle: result.id,
+      });
+
+      return resultado;
+    });
+    for (const image of images) {
+      const idSolicitudDetalleMatch = image.filename.match(/^(\d+)-/);
+      const idSolicitudDetalle = idSolicitudDetalleMatch
+        ? idSolicitudDetalleMatch[1]
+        : null;
+
+      if (idSolicitudDetalle) {
+        await Image.create({
+          image_path: `images/${image.filename}`,
+          idSolicitudDetalle,
+        });
+      }
+    }
+
+    const resultados = await Promise.all(resultadosPromises);
+    return res.json({
+      status: true,
+      message: "Imágenes guardadas correctamente.",
+    });
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
+
 module.exports.getAnalisys = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -197,7 +231,7 @@ module.exports.getAnalisys = async (req, res, next) => {
       include: [
         {
           model: SolicitudDetalle,
-          attributes: ["idAnalisis","id"],
+          attributes: ["idAnalisis", "id"],
           include: {
             model: Analisys,
             attributes: ["name"],
@@ -215,6 +249,40 @@ module.exports.getAnalisys = async (req, res, next) => {
         .status(404)
         .json({ status: false, message: "Solicitud no encontrada" });
     }
+    return res.json({ status: true, solicitud });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+module.exports.getAnalisysVer = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const solicitud = await Solicitud.findByPk(id, {
+      include: [
+        {
+          model: SolicitudDetalle,
+          include: [
+            {
+              model: Analisys,
+              attributes: ["name"],
+              include: {
+                model: Categoria,
+                attributes: ["name"],
+              },
+            },
+            {
+              model: Resultado,
+            },
+            {
+              model: Image,
+            },
+          ],
+        },
+      ],
+    });
+
     return res.json({ status: true, solicitud });
   } catch (error) {
     console.error(error);

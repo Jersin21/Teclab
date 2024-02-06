@@ -9,15 +9,70 @@ import Sidebar from "./Sidebar";
 import RadioButtonsContainer from "./RadiobuttonsContainer";
 
 const FormContainer = styled.div`
-  margin-left: 300px; /* Ancho del Sidebar */
-  margin-top: 30px; /* Ancho del Sidebar */
+  margin-left: 250px;
+  padding: 20px;
+  background-color: #1a1a2e;
+  color: white;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh; /* Ajusté la altura al 100% de la ventana */
+  overflow-y: auto; /* Habilité el desplazamiento vertical si es necesario */
+`;
+
+const FormHeader = styled.h1`
+  margin-bottom: 20px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px; /* Agregado margen superior para separar del contenido anterior */
+
+  label {
+    margin-bottom: 5px;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #292a44;
+    color: white;
+    box-sizing: border-box;
+  }
+
+  button {
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px; /* Agregado margen superior para separar del contenido anterior */
+  }
+`;
+
+const FlexRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  & > div {
+    width: 30%; /* Ajusta el ancho de cada elemento según tus necesidades */
+  }
 `;
 
 function FormAnalisys() {
   const [name, setName] = useState("");
   const [tipo, setTipo] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [data, setData] = useState([]);
   const [descripcion, setDescripcion] = useState("");
   const [selectedAnalisis, setSelectedAnalisis] = useState([]);
@@ -54,11 +109,11 @@ function FormAnalisys() {
           },
         }
       );
-      if (data.status == false) {
-        toast.error(data.msg, toastOptions);
-      }
       if (data.status == true) {
-        toast.success("Se creo la sollicitud", toastOptions);
+        toast.success("Se creo la solicitud", toastOptions);
+      }
+      if (data.status == false) {
+        toast.error("No se pudo crear la solicitud", toastOptions);
       }
     } else {
       await axios.put(
@@ -119,39 +174,54 @@ function FormAnalisys() {
 
   return (
     <FormContainer>
-      <Sidebar></Sidebar>
-
-      <form onSubmit={handlesubmit}>
-        <input
-          type="text"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-        />
-        <select
-          name=""
-          id=""
-          onChange={(e) => {
-            setTipo(e.target.value);
-          }}
-          value={tipo}
-        >
-          <option value="">Seleccione una opcion</option>
-          <option value="Clinica">Envio de muestra</option>
-          <option value="Laboratorio">Laboratorio</option>
-        </select>
-        <input
-          type="date"
-          name=""
-          id=""
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
+      <Sidebar />
+      <Form onSubmit={handlesubmit}>
+        <FormHeader>
+          {params.id ? "Actualizar Análisis" : "Nuevo Análisis"}
+        </FormHeader>
+        <button type="submit">{params.id ? "Actualizar" : "Guardar"}</button>
+        <FlexRow>
+          <div>
+            <label htmlFor="name">Nombre:</label>
+            <input
+              type="text"
+              id="name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              placeholder="Ingrese el nombre"
+            />
+          </div>
+          <div>
+            <label htmlFor="tipo">Tipo:</label>
+            <select
+              id="tipo"
+              onChange={(e) => {
+                setTipo(e.target.value);
+              }}
+              value={tipo}
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="Clinica">Envio de muestra</option>
+              <option value="Laboratorio">Laboratorio</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="date">Fecha:</label>
+            <input
+              type="date"
+              id="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+        </FlexRow>
+        <label htmlFor="descripcion">Descripción:</label>
         <textarea
-          name=""
-          id=""
+          id="descripcion"
           value={descripcion}
-          cols="100"
-          rows="1"
+          cols="30"
+          rows="5"
+          placeholder="Ingrese la descripción"
           onChange={(e) => setDescripcion(e.target.value)}
         />
         <RadioButtonsContainer
@@ -159,10 +229,9 @@ function FormAnalisys() {
           selectedAnalisisIds={selectedAnalisis}
           setSelectedAnalisis={setSelectedAnalisis}
         />
-
-        <button>{params.id ? "Update" : "Save"}</button>
-      </form>
-      <ToastContainer></ToastContainer>
+        
+      </Form>
+      <ToastContainer />
     </FormContainer>
   );
 }

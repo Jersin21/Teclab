@@ -36,6 +36,10 @@ function Login() {
       const { data } = await axios.post(loginRoute, {
         username,
         password,
+      },{
+        headers:{
+          'Content-Type': 'application/json'
+        }
       });
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
@@ -58,6 +62,8 @@ function Login() {
       toast.error("Username and password is required", toastOptions);
       return false;
     }
+    console.log(values);
+
     return true;
   };
   const handleChange = (e) => {
@@ -88,9 +94,9 @@ function Login() {
             onChange={(e) => handleChange(e)}
           />
           <button type="submit">Login</button>
-          <span>
+          {/* <span>
             Don't have an account?<Link to="/register">Register</Link>{" "}
-          </span>
+          </span> */}
         </form>
       </FormContainer>
       <ToastContainer transition={Flip} />

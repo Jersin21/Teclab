@@ -1,9 +1,9 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
-import { useState } from "react";
 import Logout from "./Logout";
 import useAuth from "../hooks/authHooks";
+import { useNavigate,Link } from "react-router-dom";
 
 const SidebarContainer = styled.div`
   position: fixed;
@@ -13,9 +13,6 @@ const SidebarContainer = styled.div`
   width: 250px;
   background-color: #131324;
   color: white;
-  box-shadow: ${({ isOpen }) =>
-    isOpen ? "4px 0px 8px rgba(0, 0, 0, 0.2)" : "none"};
-  transition: width 0.3s ease-in-out;
   overflow-x: hidden;
   z-index: 1000;
 `;
@@ -45,63 +42,83 @@ const SidebarMenu = styled.ul`
 
 const SidebarMenuItem = styled.li`
   padding: 10px 20px;
-  margin: 5px 10px 5px 10px;
+  margin: 5px 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  background-color: ${({ isActive }) => (isActive ? "#4e0eff" : "transparent")};
+  background-color: transparent;
   border-radius: 10px;
   border: 2px solid white;
-  display: flex;
-  align-items: center;
 
   &:hover {
-    background-color: ${({ isActive }) =>
-      isActive ? "#4e0eff" : "rgba(255, 255, 255, 0.1)"};
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
-  a {
-    color: ${({ isActive }) => (isActive ? "white" : "inherit")};
-    text-decoration: none;
+  button {
+    color: inherit;
     font-weight: bold;
     width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
   }
 `;
 
-const Sidebar = ({ isOpen }) => {
-  const [activeItem, setActiveItem] = useState(null);
+
+const Sidebar = () => {
+  const [activeItem, setActiveItem] = React.useState(null);
+  const [isOpen, setIsOpen] = useState(true);
   const { auth } = useAuth();
+  const navigate = useNavigate()
   const handleItemClick = (item) => {
     setActiveItem(item);
   };
-
+ 
   return (
-    <SidebarContainer isOpen={isOpen}>
-      <SidebarHeader>
-        <img src={Logo} alt="Logo" />
-        <SidebarTitle>Santa Fe</SidebarTitle>
+    <SidebarContainer>
+       <SidebarHeader>
+        <Link to="/">
+          <img src={Logo} alt="Logo" />
+        </Link>
+        <SidebarTitle>Teclab</SidebarTitle>
       </SidebarHeader>
       <SidebarMenu>
-        <SidebarMenuItem
-          onClick={() => handleItemClick("Doctores")}
-          isActive={activeItem === "Doctores"}
-        >
-          Doctores
-        </SidebarMenuItem>
-        <SidebarMenuItem
-          onClick={() => handleItemClick("Análisis")}
-          isActive={activeItem === "Análisis"}
-        >
-          Análisis
-        </SidebarMenuItem>
-        <SidebarMenuItem
-          onClick={() => handleItemClick("Reportes")}
-          isActive={activeItem === "Reportes"}
-        >
-          Reportes
-        </SidebarMenuItem>
+        {auth.idTipoUsuario === 5 && (
+          <SidebarMenuItem
+            onClick={() => handleItemClick("Análisis")}
+            isActive={activeItem === "Análisis"}
+          >
+            <button onClick={() => navigate("/medico")}>Análisis</button>
+          </SidebarMenuItem>
+        )}
+        {auth.idTipoUsuario === 6 && (
+          <SidebarMenuItem
+            onClick={() => handleItemClick("Solicitudes")}
+            isActive={activeItem === "Solicitudes"}
+          >
+            <button onClick={() => navigate("/responsable")}>Solicitudes</button>
+          </SidebarMenuItem>
+        )}
+        {auth.idTipoUsuario === 7 && (
+          <SidebarMenuItem
+            onClick={() => handleItemClick("Solicitudes")}
+            isActive={activeItem === "Solicitudes"}
+          >
+            <button onClick={() => navigate("/recepcionista")}>Solicitudes</button>
+          </SidebarMenuItem>
+        )}
+        {auth.idTipoUsuario === 2 && (
+          <SidebarMenuItem
+            onClick={() => handleItemClick("Creacion Medicos")}
+            isActive={activeItem === "Creacion Medicos"}
+          >
+            <button onClick={() => navigate("/registerDoctor")}>Creacion Medicos</button>
+          </SidebarMenuItem>
+        )}
       </SidebarMenu>
       <Logout />
-      <h1>Hola {auth.username}</h1>
     </SidebarContainer>
   );
 };

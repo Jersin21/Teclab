@@ -8,17 +8,28 @@ import { useNavigate } from "react-router-dom";
 import { Flip, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const FormContainer = styled.div`
+  padding: 20px;
+  background-color: #1a1a2e;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh; /* Ajusté la altura al 100% de la ventana */
+  overflow-y: auto; /* Habilité el desplazamiento vertical si es necesario */
+`;
+
 const FormularioCentroMedicoContainer = styled.div`
   max-width: 400px;
   margin: 0 auto;
 `;
 
 const FormularioCentroMedico = styled.form`
-  padding: 5px 20px;
-
+  padding: 20px;
+  background-color: #1a1a2e;
+  color: white;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  border-radius: 10px;
 
   label {
     display: flex;
@@ -28,14 +39,21 @@ const FormularioCentroMedico = styled.form`
 
   input,
   textarea {
-    padding: 5px;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #292a44;
+    color: white;
+    box-sizing: border-box;
   }
 
   button {
-    padding: 10px;
+    padding: 15px;
     background-color: #4caf50;
     color: white;
     cursor: pointer;
+    border: none;
+    border-radius: 5px;
   }
 `;
 function RegisterCenter() {
@@ -64,7 +82,7 @@ function RegisterCenter() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     //if (handleValidation()) {
-    const { nombre, direccion, telefono, especialidades } = centroMedico;
+    const { nombre, direccion, telefono, especialidades,responsable,password } = centroMedico;
     const { data } = await axios.post(
       centerRoute,
       {
@@ -72,6 +90,8 @@ function RegisterCenter() {
         direccion,
         telefono,
         especialidades,
+        responsable,
+        password,
       },
       {
         headers: {
@@ -85,15 +105,16 @@ function RegisterCenter() {
     }
     if(data.status === true){
       toast.success(data.msg, toastOptions)
-
-      navigate("/")
-
+      setTimeout(() => {
+        navigate("/")
+      }, 1000);
     }
-    //}
+
   };
   return (
     <>
       <Sidebar />
+      <FormContainer>
       <FormularioCentroMedicoContainer>
         <FormularioCentroMedico onSubmit={handleSubmit}>
           <label>
@@ -125,6 +146,24 @@ function RegisterCenter() {
               onChange={handleChange}
             />
           </label>
+          <label>
+            Responsable:
+            <input
+              type="text"
+              name="responsable"
+              value={centroMedico.responsable}
+              onChange={handleChange}
+            />
+          </label>
+          <label>
+            Password:
+            <input
+              type="password"
+              name="password"
+              value={centroMedico.password}
+              onChange={handleChange}
+            />
+          </label>
 
           <label>
             Descripción de las Especialidades:
@@ -139,7 +178,7 @@ function RegisterCenter() {
         </FormularioCentroMedico>
       </FormularioCentroMedicoContainer>
       <ToastContainer transition={Flip}/>
-
+      </FormContainer>
     </>
   );
 }

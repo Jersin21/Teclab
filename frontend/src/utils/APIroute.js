@@ -9,4 +9,6 @@ export const medicoRoute = `${host}/api/auth/medicos`;
 export const recepcionistaRoute = `${host}/api/auth/recepcionista`;
 export const responsableRoute = `${host}/api/auth/responsable`;
 export const getMeRoute = `${host}/api/auth/me`;
-export const centerRoute = `${host}/api/auth/registerCenter`
+export const centerRoute = `${host}/api/auth/registerCenter`;
+export const analisysVerRoute = `${host}/api/auth/analisysVer`;
+export const getmedicoRoute = `${host}/api/auth/getmedicos`;

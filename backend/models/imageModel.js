@@ -27,7 +27,7 @@ const Image = bd.define(
     tableName: "image",
   }
 );
-Image.belongsTo(SolicitudDetalle, { foreignKey: 'idSolicitudDetalle'});
-
+/* Image.belongsTo(SolicitudDetalle, { foreignKey: 'idSolicitudDetalle',targetKey: 'id'});
+ */
 
 module.exports = Image;

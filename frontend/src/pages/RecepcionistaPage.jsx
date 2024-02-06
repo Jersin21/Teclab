@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import TableRecepcionista from "../components/TableRecepcionista";
 import axios from "axios";
-import { analisysRoute, recepcionistaRoute } from "../utils/APIroute";
+import { analisysRoute, getmedicoRoute, recepcionistaRoute } from "../utils/APIroute";
 import styled from "styled-components";
 import useAuth from "../hooks/authHooks";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,7 @@ function RecepcionistaPage() {
     },
   };
   const [data, setData] = useState([]);
+  const [medico, setMedico] = useState([]);
 
   if (idTipoUsuario !== 7) {
     navigate("/");
@@ -32,6 +33,10 @@ function RecepcionistaPage() {
     async function fectData() {
       const res = await axios.get(recepcionistaRoute, config);
       setData(res.data);
+      console.log(res.data)
+      const resMedico = await axios.get(getmedicoRoute,config);
+      setMedico(resMedico.data);
+      console.log(resMedico.data)
     }
     fectData();
   }, [idTipoUsuario, isLoading, navigate]);
