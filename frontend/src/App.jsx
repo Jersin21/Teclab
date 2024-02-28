@@ -14,6 +14,8 @@ import RegisterDoctor from "./pages/registerDoctor";
 import RegisterCenter from "./pages/registerCenter";
 import MedicoPage from "./pages/MedicoPage";
 import { useEffect } from "react";
+import TableMedicos from "./components/TableMedicos";
+import AdminCenterPage from "./pages/AdminCenterPage";
 
 
 function App() {
@@ -35,7 +37,9 @@ function App() {
           <Route path="/responsable" element={<ResponsablePage />} />
           <Route path="/responsable/subir/:id" element={<FormSubir />} />
           <Route path="/analisysVer/ver/:id" element={<FormVer />} />
+          <Route path="/medicos" element={<AdminCenterPage />} />
           <Route path="/registerDoctor" element={<RegisterDoctor />} />
+          <Route path="/medicos/:id" element={<RegisterDoctor />} />
           <Route path="/registerCenter" element={<RegisterCenter />} />
           <Route path="/admin" element={<RegisterCenter />} />
         </Routes>

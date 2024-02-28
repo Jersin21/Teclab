@@ -15,7 +15,7 @@ const {
   getAnalisysVer,
 } = require("../controllers/analisysController");
 const { TipoAnalisis } = require("../controllers/tipoanalisysController");
-const { getMedicos, createMedico } = require("../controllers/medicosController");
+const { getMedicos, createMedico,updateMedico, getMedico, deleteMedico } = require("../controllers/medicosController");
 const { checkAuth,checkPermission} = require("../middleware/authMiddleware");
 const { createClinica } = require("../controllers/clinicaController");
 
@@ -54,6 +54,9 @@ router.get("/responsable",checkAuth,checkPermission([1,2,5,6,7]), getSolicitudRe
 router.get("/medicos",checkAuth,checkPermission([1,2,5,6,7]), getResponsable);
 router.get("/getmedicos",checkAuth,checkPermission([1,2,5,6,7]), getMedicos);
 router.post("/medicos",checkAuth,checkPermission([1,2,5,6,7]), createMedico)
+router.get("/medicos/:id",checkAuth,checkPermission([1,2,5,6,7]), getMedico)
+router.put("/medicos/:id",checkAuth,checkPermission([1,2,5,6,7]), updateMedico)
+router.delete("/medicos/:id",checkAuth,checkPermission([1,2,5,6,7]), deleteMedico)
 
 router.post("/registerCenter",checkAuth,checkPermission([1,2,5,6,7]),createClinica)
 

@@ -30,7 +30,7 @@ const Medico = bd.define(
     tableName: "medico",
   }
 );
-Medico.belongsTo(User, { foreignKey: "idUsuario" });
+Medico.belongsTo(User, { foreignKey: "idUsuario", onDelete:'CASCADE' });
 
 Clinica.hasMany(Medico, { foreignKey: 'idclinica', sourceKey: 'id' });
 Medico.belongsTo(Clinica, { foreignKey: 'idclinica', targetKey: 'id' });

@@ -41,7 +41,6 @@ const Form = styled.form`
   }
 `;
 
-
 const StyledImage = styled.img`
   width: 200px;
   height: 200px;
@@ -65,7 +64,7 @@ const FormVerAnalisys = ({ analisys }) => {
         <br />
         <h3>{analisys.analisis.name}</h3>
         <br />
-        <p>Detalles : {analisys.resultado.detalle}</p>
+        <p>Detalles: {analisys.resultado.detalle}</p>
         <RViewer imageUrls={images}>
           {images.map((image, index) => (
             <RViewerTrigger key={index} index={index}>

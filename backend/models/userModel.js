@@ -50,7 +50,7 @@ const User = bd.define(
   }
 );
 
-User.belongsTo(Persona, { foreignKey: "idPersona" });
+User.belongsTo(Persona, { foreignKey: "idPersona",onDelete:'CASCADE' });
 
 User.belongsTo(TipoUsuario, { foreignKey: 'idTipoUsuario' });
 

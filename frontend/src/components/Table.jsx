@@ -123,7 +123,14 @@ const Table = ({ data }) => {
               <TableCell>
                 <EditButton
                   onClick={() => {
-                    navigate("/analisys/" + item.id);
+                    if (item.estado === "Iniciado") {
+                      navigate("/analisys/" + item.id);
+                    } else {
+                      toast.error(
+                        "No se puede editar. La solicitud ya ha sido asignada",
+                        toastOptions
+                      );
+                    }
                   }}
                 >
                   Editar
@@ -153,7 +160,11 @@ const Table = ({ data }) => {
                 </DeleteButton>
                 <ViewButton
                   onClick={() => {
-                    navigate("/analisysVer/ver/" + item.id);
+                    if (item.estado == "Completado") {
+                      navigate("/analisysVer/ver/" + item.id);
+                    } else {
+                      toast.error("No se puede visualizar.", toastOptions);
+                    }
                   }}
                 >
                   Visualizar

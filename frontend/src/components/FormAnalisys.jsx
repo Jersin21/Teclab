@@ -132,7 +132,6 @@ function FormAnalisys() {
           },
         }
       );
-      console.log(selectedAnalisis);
     }
     e.target.reset();
     navigate("/medico");
@@ -158,7 +157,6 @@ function FormAnalisys() {
       );
 
       setSelectedAnalisis(analisisSeleccionados);
-      console.log(res.data);
     }
     async function getAnalisys() {
       const res = await axios.get(tipoanalisysRoute, {
