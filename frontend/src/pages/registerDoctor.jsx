@@ -18,10 +18,31 @@ const FormContainer = styled.div`
   background-color: #1a1a2e;
   flex-direction: column;
   align-items: center;
-  height: 100vh; /* Ajusté la altura al 100% de la ventana */
-  overflow-y: auto; /* Habilité el desplazamiento vertical si es necesario */
+  height: 100vh; 
+  overflow-y: auto; 
 `;
+const BackButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
 
+  &:hover {
+    background-color: #45a049;
+  }
+
+  svg {
+    margin-right: 5px;
+  }
+`;
 const FormularioMedico = styled.form`
   padding: 20px;
   background-color: #1a1a2e;
@@ -152,6 +173,9 @@ const RegisterDoctor = () => {
             {params.id ? "Actualizar Medico" : "Nuevo Medico"}
           </FormHeader>
           <FormularioMedico onSubmit={handleSubmit}>
+            <BackButton onClick={() => navigate("/medicos")}>
+              Volver
+            </BackButton>
             <label>
               Nombre:
               <input

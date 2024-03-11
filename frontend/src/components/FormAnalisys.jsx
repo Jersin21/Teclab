@@ -16,10 +16,31 @@ const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh; /* Ajusté la altura al 100% de la ventana */
-  overflow-y: auto; /* Habilité el desplazamiento vertical si es necesario */
+  height: 100vh; 
+  overflow-y: auto; 
 `;
+const BackButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
 
+  &:hover {
+    background-color: #45a049;
+  }
+
+  svg {
+    margin-right: 5px;
+  }
+`;
 const FormHeader = styled.h1`
   margin-bottom: 20px;
 `;
@@ -29,7 +50,7 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: 20px; /* Agregado margen superior para separar del contenido anterior */
+  margin-top: 20px; 
 
   label {
     margin-bottom: 5px;
@@ -55,7 +76,7 @@ const Form = styled.form`
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    margin-top: 20px; /* Agregado margen superior para separar del contenido anterior */
+    margin-top: 20px; 
   }
 `;
 
@@ -65,7 +86,7 @@ const FlexRow = styled.div`
   width: 100%;
 
   & > div {
-    width: 30%; /* Ajusta el ancho de cada elemento según tus necesidades */
+    width: 30%; 
   }
 `;
 
@@ -174,6 +195,9 @@ function FormAnalisys() {
     <FormContainer>
       <Sidebar />
       <Form onSubmit={handlesubmit}>
+      <BackButton onClick={() => navigate("/medico")}>
+      Volver
+    </BackButton>
         <FormHeader>
           {params.id ? "Actualizar Análisis" : "Nuevo Análisis"}
         </FormHeader>

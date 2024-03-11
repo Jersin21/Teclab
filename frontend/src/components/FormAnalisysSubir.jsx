@@ -29,7 +29,7 @@ const Form = styled.form`
   }
 
   input[type="file"] {
-    display: none; /* Oculta el input de tipo file */
+    display: none; 
   }
 
   .file-input-label {

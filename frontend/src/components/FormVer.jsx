@@ -28,24 +28,51 @@ const ButtonContainer = styled.div`
 `;
 
 const DownloadButton = styled.button`
-position: fixed;
-top: 50px;
-right: 100px;
-background-color: #3498db;
-color: #fff;
-padding: 10px 20px;
-font-size: 16px;
-border: none;
-border-radius: 5px;
-cursor: pointer;
+  position: fixed;
+  top: 50px;
+  right: 150px; 
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 
-&:hover {
-  background-color: #2980b9;
-}
+  &:hover {
+    background-color: #2980b9;
+  }
 `;
+
+const BackButton = styled.button`
+  position: fixed;
+  top: 50px;
+  right: 20px; 
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #45a049;
+  }
+
+  svg {
+    margin-right: 5px;
+  }
+`;
+
 
 const FormVer = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [results, setResults] = useState([]);
   const [images, setImages] = useState([]);
@@ -61,7 +88,6 @@ const FormVer = () => {
     async function fetchAnalisis() {
       const res = await axios.get(`${analisysVerRoute}/${params.id}`, config);
       setData(res.data);
-      console.log(res.data);
     }
     fetchAnalisis();
   }, []);
@@ -70,6 +96,9 @@ const FormVer = () => {
       <FormContainer>
         <Sidebar></Sidebar>
         <h1>Ver Resultado de Análisis</h1>
+        <BackButton onClick={() => navigate("/medico")}>
+          Volver
+        </BackButton>
         {data.solicitud?.solicituddetalles?.map((detalle) => (
           <FormVerAnalisys key={detalle.id} analisys={detalle} />
         ))}

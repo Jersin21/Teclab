@@ -13,7 +13,7 @@ const NoData = styled.div`
   background-color: #f2f2f2;
   border: 1px solid #ddd;
   text-align: center;
-  color: #333; /* Cambia el color del texto según tu preferencia */
+  color: #333; 
 `;
 
 const TableHead = styled.thead`
@@ -28,7 +28,7 @@ const TableHead = styled.thead`
 `;
 
 const TableContainer = styled.div`
-  margin-left: 250px; /* Ancho del Sidebar */
+  margin-left: 250px; 
 `;
 
 const TableBody = styled.tbody``;
@@ -38,10 +38,10 @@ const TableRow = styled.tr``;
 const TableCell = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
-  color: white; /* Cambia el color del texto según tu preferencia */
+  color: white; 
 
   &:last-child {
-    width: 150px; /* Ajusta el ancho de la última columna (acciones) según tus necesidades */
+    width: 150px; 
   }
 `;
 

@@ -8,7 +8,7 @@ const Container = styled.div`
 
 const CategoryTitle = styled.h3`
   margin-top: 20px;
-  text-align: left; /* Alineado a la izquierda */
+  text-align: left; 
   color: #fff;
 `;
 
@@ -16,7 +16,7 @@ const CheckboxRow = styled.div`
 
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* Cambiado de flex-end a flex-start */
+  justify-content: flex-start; 
 `;
 
 

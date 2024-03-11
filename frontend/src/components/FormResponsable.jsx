@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { analisysRoute, tipoanalisysRoute } from "../utils/APIroute";
 import Sidebar from "./Sidebar";
 const FormContainer = styled.div`
-    margin-left: 250px; /* Ancho del Sidebar */
+    margin-left: 250px;
     display: flex;
   `;
 
@@ -60,12 +60,7 @@ function FormResponsable() {
         date,
         descripcion,
       },config);
-      // if (data.status == false) {
-      //   toast.error(data.msg, toastOptions);
-      // }
-      // if (data.status === true) {
-      //   toast.success("Se actualizo la solicitud", toastOptions);
-      // }
+    
     }
     e.target.reset();
     navigate("/");

@@ -25,7 +25,7 @@ const TableHead = styled.thead`
 `;
 
 const TableContainer = styled.div`
-  margin-left: 250px; /* Ancho del Sidebar */
+  margin-left: 250px; 
 `;
 
 const TableBody = styled.tbody``;
@@ -38,7 +38,7 @@ const TableCell = styled.td`
   color: white;
 
   &:last-child {
-    width: 300px; /* Ajusta el ancho de la última columna (acciones) según tus necesidades */
+    width: 300px; 
   }
 `;
 
@@ -52,7 +52,7 @@ const ActionButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #4caf50; /* Cambia el color al pasar el ratón */
+    background-color: #4caf50; 
   }
 `;
 

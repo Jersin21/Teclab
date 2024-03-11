@@ -94,9 +94,7 @@ function Login() {
             onChange={(e) => handleChange(e)}
           />
           <button type="submit">Login</button>
-          {/* <span>
-            Don't have an account?<Link to="/register">Register</Link>{" "}
-          </span> */}
+         
         </form>
       </FormContainer>
       <ToastContainer transition={Flip} />

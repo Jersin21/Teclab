@@ -5,16 +5,16 @@ import styled from 'styled-components';
 
 const HomepageContainer = styled.div`
   display: flex;
-  height: 100vh; /* Altura total de la ventana */
+  height: 100vh; 
   background-color: #1a1a2e;
   overflow-x: hidden;
-  padding: 20px; /* Espaciado interior */
-  margin-left: 250px; /* Ancho del Sidebar */
+  padding: 20px; 
+  margin-left: 250px; 
   color: white;
 `;
 
 const ContentContainer = styled.div`
-  flex: 1; /* Toma el espacio restante */
+  flex: 1; 
 `;
 
 export default function Homepage() {

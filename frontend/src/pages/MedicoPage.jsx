@@ -55,25 +55,24 @@ const MedicoPage = () => {
 };
 const HomepageContainer = styled.div`
   display: flex;
-  height: 100vh; /* Altura total de la ventana */
-  background-color: #25136a; /* Color de fondo del Sidebar y del contenido */
+  height: 100vh;
+  background-color: #25136a; 
   overflow-x: hidden;
 `;
 
-// Estilos para el contenido principal
 const ContentContainer = styled.div`
-  flex-grow: 1; /* Hace que el contenido principal ocupe todo el espacio disponible */
-  padding: 20px; /* Espaciado interior */
+  flex-grow: 1; 
+  padding: 20px; 
   flex-direction: column;
-  align-items: flex-start; /* Alinéalo a la izquierda */
-  justify-content: flex-start; /* Alinéalo hacia arriba */
-  margin: 20px; /* Margen exterior */
+  align-items: flex-start; 
+  justify-content: flex-start; 
+  margin: 20px; 
 `;
 
 const TableContainer = styled.div`
-  background-color: #25136a; // Cambia el color de fondo según tu preferencia
+  background-color: #25136a;
   padding: 1rem;
   border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); // Agrega sombra si lo deseas
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
 `;
 export default MedicoPage;

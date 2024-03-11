@@ -31,8 +31,31 @@ const SubirResultadoButton = styled.button`
   border: none;
   border-radius: 5px;
 `;
+const BackButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #45a049;
+  }
+
+  svg {
+    margin-right: 5px;
+  }
+`;
 
 const FormSubir = () => {
+  const navigate = useNavigate()
   const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
   const config = {
     headers: {
@@ -103,7 +126,7 @@ const FormSubir = () => {
 
       for (const analysis of images) {
         const { id, images: imageArray } = analysis;
-      
+
         for (const image of imageArray) {
           if (image instanceof File) {
             const newImageName = `${id}-${image.name}`;
@@ -116,8 +139,6 @@ const FormSubir = () => {
         formData,
         config
       );
-      console.log(response);
-
       if (response.data.status === true) {
         toast.success("Resultado y archivo subidos con éxito", toastOptions);
         setTimeout(() => {
@@ -137,6 +158,9 @@ const FormSubir = () => {
       <Sidebar />
       <h1>Subir Resultado de Análisis</h1>
       <form onSubmit={(e) => handleSubmit(e)} enctype="multipart/form-data">
+        <BackButton onClick={() => navigate("/responsable")}>
+          Volver
+        </BackButton>
         {data.solicitud?.solicituddetalles?.map((detalle, index) => (
           <AnalysisForm
             key={index}

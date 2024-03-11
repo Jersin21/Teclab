@@ -40,7 +40,6 @@ const StyledForm = styled.form`
   }
 
   button {
-    width: 20%;
     padding: 10px;
     background-color: #4caf50;
     color: white;
@@ -50,6 +49,29 @@ const StyledForm = styled.form`
   }
 `;
 
+
+const BackButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #45a049;
+  }
+
+  svg {
+    margin-right: 5px;
+  }
+`;
 const FormAsignar = () => {
   const params = useParams();
   const navigate = useNavigate();
@@ -116,6 +138,9 @@ const FormAsignar = () => {
         <Sidebar />
         <FormHeader>Asignar médico</FormHeader>
         <StyledForm onSubmit={handleSubmit}>
+          <BackButton onClick={() => navigate("/recepcionista")}>
+            Volver
+          </BackButton>
           <select
             key="default"
             name=""

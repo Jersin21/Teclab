@@ -12,7 +12,7 @@ const NoData = styled.div`
   background-color: #f2f2f2;
   border: 1px solid #ddd;
   text-align: center;
-  color: #333; /* Cambia el color del texto según tu preferencia */
+  color: #333; 
 `;
 
 const TableHead = styled.thead`
@@ -27,7 +27,7 @@ const TableHead = styled.thead`
 `;
 
 const TableContainer = styled.div`
-  margin-left: 250px; /* Ancho del Sidebar */
+  margin-left: 250px; 
 `;
 
 const TableBody = styled.tbody``;
@@ -45,12 +45,12 @@ const ActionButton = styled.button`
   padding: 5px 10px;
   border: none;
   cursor: pointer;
-  background-color: #3498db; /* Cambia el color del botón según tu preferencia */
+  background-color: #3498db; 
   color: white;
   border-radius: 5px;
 
   &:hover {
-    background-color: #2980b9; /* Cambia el color de fondo al pasar el ratón */
+    background-color: #2980b9; 
   }
 `;
 
