@@ -17,7 +17,7 @@ const {
 const { TipoAnalisis } = require("../controllers/tipoanalisysController");
 const { getMedicos, createMedico,updateMedico, getMedico, deleteMedico } = require("../controllers/medicosController");
 const { checkAuth,checkPermission} = require("../middleware/authMiddleware");
-const { createClinica } = require("../controllers/clinicaController");
+const { createClinica,getClinica, getClinicas, updateClinica, deleteClinica  } = require("../controllers/clinicaController");
 
 const router = require("express").Router();
 
@@ -57,8 +57,12 @@ router.post("/medicos",checkAuth,checkPermission([1,2,5,6,7]), createMedico)
 router.get("/medicos/:id",checkAuth,checkPermission([1,2,5,6,7]), getMedico)
 router.put("/medicos/:id",checkAuth,checkPermission([1,2,5,6,7]), updateMedico)
 router.delete("/medicos/:id",checkAuth,checkPermission([1,2,5,6,7]), deleteMedico)
+router.get("/admin/:id",checkAuth,checkPermission([1,2,5,6,7]), getClinica)
+router.get("/admin",checkAuth,checkPermission([1,2,5,6,7]), getClinicas)
+router.put("/admin/:id",checkAuth,checkPermission([1,2,5,6,7]), updateClinica)
+router.delete("/admin/:id",checkAuth,checkPermission([1,2,5,6,7]),deleteClinica)
 
-router.post("/registerCenter",checkAuth,checkPermission([1,2,5,6,7]),createClinica)
+router.post("/admin",checkAuth,checkPermission([1,2,5,6,7]),createClinica)
 
 router.get("/me", checkAuth, getMe)
 

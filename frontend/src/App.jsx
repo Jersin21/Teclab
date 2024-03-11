@@ -16,6 +16,7 @@ import MedicoPage from "./pages/MedicoPage";
 import { useEffect } from "react";
 import TableMedicos from "./components/TableMedicos";
 import AdminCenterPage from "./pages/AdminCenterPage";
+import AdminPage from "./pages/AdminPage";
 
 
 function App() {
@@ -41,7 +42,8 @@ function App() {
           <Route path="/registerDoctor" element={<RegisterDoctor />} />
           <Route path="/medicos/:id" element={<RegisterDoctor />} />
           <Route path="/registerCenter" element={<RegisterCenter />} />
-          <Route path="/admin" element={<RegisterCenter />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/:id" element={<RegisterCenter />} />
         </Routes>
         </AuthProvider>
       </BrowserRouter>
