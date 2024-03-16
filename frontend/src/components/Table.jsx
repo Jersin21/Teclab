@@ -143,10 +143,10 @@ const Table = ({ data }) => {
                         config
                       );
                       if (data.status === false) {
-                        toast.error("No se pudo eliminar", toastOptions);
+                        toast.error("No se pudo eliminar la solicitud", toastOptions);
                       }
                       if (data.status === true) {
-                        toast.success("Se eliminó", toastOptions);
+                        toast.success("Solicitud eliminada exitosamente", toastOptions);
                         setTimeout(() => {
                           window.location.reload();
                         }, 500);

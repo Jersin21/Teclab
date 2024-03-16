@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FileInputContainer = styled.div`
   width: 100%;
@@ -30,28 +32,79 @@ const RemoveButton = styled.button`
   margin-top: 5px;
 `;
 
-const InputFile = ({ onChange, onImagesChange,analisisids }) => {
+const InputFile = ({ onChange, onImagesChange, analisisids }) => {
   const [files, setFiles] = useState([]);
-  const generateUniqueId = () => {
-    return `file-${Math.random().toString(36).substr(2, 9)}`;
+  const [selectedFileNames, setSelectedFileNames] = useState([]);
+  const inputRef = useRef(null);
+  const toastOptions = {
+    position: "top-right",
+    hideProgressBar: true,
+    pauseOnHover: true,
+    draggable: true,
+    autoClose: 3000,
+    theme: "dark",
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
+    e.preventDefault();
+
     const selectedFiles = e.target.files;
     const selectedFilesArray = Array.from(selectedFiles);
 
-    const filesArray = selectedFilesArray
+    const newFiles = selectedFilesArray.filter(
+      (file) => !files.some((f) => f.name === file.name)
+    );
 
-    setFiles((prevFiles) => [...prevFiles, ...filesArray]);
+
+    const isValidFileType = selectedFilesArray.every((file) =>
+      ["image/jpeg", "image/png", "image/gif"].includes(file.type)
+    );
+
+    const isValidFileSize = selectedFilesArray.every(
+      (file) => file.size / 1024 / 1024 < 3
+    );
+
+    if (!isValidFileType) {
+      toast.error(
+        "Solo se permiten archivos de tipo imagen (JPEG, PNG, ETC.).",
+        toastOptions
+      );
+      return;
+    }
+
+    if (!isValidFileSize) {
+      toast.error(
+        "El tamaño máximo permitido para las imágenes es de 5MB.",
+        toastOptions
+      );
+      return;
+    }
+
+    if (selectedFilesArray.length > 5) {
+      toast.error("No puedes subir más de 5 archivos.", toastOptions);
+      return;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    const filesArray = selectedFilesArray;
+
+    setFiles([...files, ...filesArray]);
+    setSelectedFileNames([...selectedFileNames, ...selectedFilesArray]);
 
     onChange([...files, ...filesArray]);
     onImagesChange([...files, ...filesArray]);
   };
 
-  const handleRemoveFile = (id) => {
-    const updatedFiles = files.filter((file) => file.id !== id);
+  const handleRemoveFile = (index) => {
+    const updatedFiles = files.filter((file, idx) => idx !== index);
     setFiles(updatedFiles);
+    setSelectedFileNames(selectedFileNames.filter((_, idx) => idx !== index));
     onChange(updatedFiles);
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
 
   return (
@@ -59,6 +112,7 @@ const InputFile = ({ onChange, onImagesChange,analisisids }) => {
       <FileInputLabel>
         Seleccionar archivos
         <input
+          ref={inputRef}
           type="file"
           accept="image/*"
           multiple
@@ -67,10 +121,10 @@ const InputFile = ({ onChange, onImagesChange,analisisids }) => {
           name="images"
         />
       </FileInputLabel>
-      {files.map((file) => (
-        <div key={file.id}>
+      {files.map((file, index) => (
+        <div key={index}>
           <p>{file.name}</p>
-          <RemoveButton onClick={() => handleRemoveFile(file.id)}>
+          <RemoveButton type="button" onClick={() => handleRemoveFile(index)}>
             Eliminar
           </RemoveButton>
         </div>

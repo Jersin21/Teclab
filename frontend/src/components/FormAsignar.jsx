@@ -49,7 +49,6 @@ const StyledForm = styled.form`
   }
 `;
 
-
 const BackButton = styled.button`
   position: absolute;
   top: 20px;
@@ -107,6 +106,10 @@ const FormAsignar = () => {
   }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!medicoSeleccionado) {
+      toast.error("Por favor, seleccione un responsable.", toastOptions);
+      return;
+    }
     try {
       const { data } = await axios.put(
         `${recepcionistaRoute}/${params.id}`,
@@ -115,13 +118,11 @@ const FormAsignar = () => {
         },
         config
       );
-      e.target.reset();
-
       if (data.status === true) {
         toast.success("Se asignó exitosamente", toastOptions);
         setTimeout(() => {
           window.location.href = "/recepcionista";
-        }, 1000);
+        }, 800);
       }
     } catch (error) {
       console.error(error);
@@ -159,8 +160,8 @@ const FormAsignar = () => {
           </select>
           <button type="submit">Asignar</button>
         </StyledForm>
+        <ToastContainer></ToastContainer>
       </FormContainer>
-      <ToastContainer />
     </div>
   );
 };

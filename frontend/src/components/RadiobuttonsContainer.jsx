@@ -8,17 +8,15 @@ const Container = styled.div`
 
 const CategoryTitle = styled.h3`
   margin-top: 20px;
-  text-align: left; 
+  text-align: left;
   color: #fff;
 `;
 
 const CheckboxRow = styled.div`
-
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; 
+  justify-content: flex-start;
 `;
-
 
 const CheckboxInput = styled.input`
   cursor: pointer;
@@ -31,8 +29,6 @@ const CheckboxLabel = styled.label`
   color: white;
   cursor: pointer;
 `;
-
-
 
 const RadioButtonsContainer = ({
   datos,
@@ -57,9 +53,8 @@ const RadioButtonsContainer = ({
 
     setCategoriasConAnalisis(groupedAnalisis);
   }, [datos]);
-
   const handleCheckboxChange = (e) => {
-    const idAnalisis = e.target.value;
+    const idAnalisis = parseInt(e.target.value, 10);
 
     setSelectedAnalisis((prevSelected) => {
       if (prevSelected.includes(idAnalisis)) {
@@ -68,6 +63,7 @@ const RadioButtonsContainer = ({
         return [...prevSelected, idAnalisis];
       }
     });
+    console.log(selectedAnalisisIds);
   };
 
   return (
@@ -82,20 +78,19 @@ const RadioButtonsContainer = ({
                   <CheckboxLabel htmlFor={analisis.id}>
                     {analisis.name}
                   </CheckboxLabel>
-                  <CheckboxInput
-                    onChange={handleCheckboxChange}
-                    type="checkbox"
-                    value={analisis.id}
-                    id={analisis.id}
-                    checked={selectedAnalisisIds.includes(analisis.id)}
-                  />
+                    <CheckboxInput
+                      onChange={handleCheckboxChange}
+                      type="checkbox"
+                      value={analisis.id}
+                      id={analisis.id}
+                      checked={selectedAnalisisIds.includes(analisis.id)}
+                    />
                 </div>
               )
             )}
           </CheckboxRow>
         </div>
       ))}
-      
     </Container>
   );
 };

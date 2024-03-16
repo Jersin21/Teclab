@@ -55,7 +55,7 @@ const BackButton = styled.button`
 `;
 
 const FormSubir = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
   const config = {
     headers: {
@@ -120,6 +120,16 @@ const FormSubir = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const areResultsComplete = results.every(
+      (result) => result.value.trim() !== ""
+    );
+    if (!areResultsComplete) {
+      toast.error(
+        "Por favor, completa todos los campos de resultado.",
+        toastOptions
+      );
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("results", JSON.stringify(results));
@@ -158,9 +168,7 @@ const FormSubir = () => {
       <Sidebar />
       <h1>Subir Resultado de Análisis</h1>
       <form onSubmit={(e) => handleSubmit(e)} enctype="multipart/form-data">
-        <BackButton onClick={() => navigate("/responsable")}>
-          Volver
-        </BackButton>
+        <BackButton onClick={() => navigate("/responsable")}>Volver</BackButton>
         {data.solicitud?.solicituddetalles?.map((detalle, index) => (
           <AnalysisForm
             key={index}

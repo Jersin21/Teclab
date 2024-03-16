@@ -118,10 +118,10 @@ function TableMedicos({ data }) {
                           config
                         );
                         if (data.status === false) {
-                          toast.error("No se pudo eliminar", toastOptions);
+                          toast.error("No se pudo eliminar el medico", toastOptions);
                         }
                         if (data.status === true) {
-                          toast.success("Se eliminó", toastOptions);
+                          toast.success("Se eliminó al medico exitosamente", toastOptions);
                           setTimeout(() => {
                             window.location.reload();
                           }, 500);

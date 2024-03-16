@@ -1,6 +1,8 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import InputFile from "./InputFile";
+import { Flip, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Form = styled.form`
   display: flex;
@@ -29,7 +31,7 @@ const Form = styled.form`
   }
 
   input[type="file"] {
-    display: none; 
+    display: none;
   }
 
   .file-input-label {
@@ -45,7 +47,6 @@ const Form = styled.form`
   }
 `;
 
-
 const AnalysisForm = ({
   category,
   analysis,
@@ -53,10 +54,17 @@ const AnalysisForm = ({
   onImageChange,
   onRemoveImage,
   analysisId,
-  
 }) => {
   const [resultado, setResultado] = useState("");
   const [images, setImages] = useState([]);
+  const toastOptions = {
+    position: "top-right",
+    hideProgressBar: true,
+    pauseOnHover: true,
+    draggable: true,
+    autoClose: 3000,
+    theme: "dark",
+  };
 
   const handleResultadoChange = (e) => {
     const value = e.target.value;
@@ -66,9 +74,9 @@ const AnalysisForm = ({
 
   const handleImageChange = (updatedImages) => {
     setImages(updatedImages);
-    onImageChange(analysis.id,updatedImages);
+    onImageChange(analysis.id, updatedImages);
   };
-  
+
   return (
     <Form>
       <h2>{category}</h2>

@@ -12,7 +12,6 @@ const Clinica = require("../models/clinicaModel");
 const TipoUsuario = require("../models/tipousuarioModel");
 const Persona = require("../models/personaModel");
 
-
 module.exports.solicitudes = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -69,23 +68,48 @@ module.exports.registerAnalisys = async (req, res, next) => {
     }
     return res.json({ status: true, newAnalisys });
   } catch (error) {
-    console.log(error);
-
-    return res.json({ status: false });
+    console.error(error);
+    next(error);
   }
 };
 module.exports.updateAnalisys = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, tipo, date, descripcion } = req.body;
+    const { name, tipo, date, descripcion, idAnalisis } = req.body;
 
-    const analisys = await Solicitud.findByPk(id);
-
+    const analisys = await Solicitud.findByPk(id, {
+      include: [
+        {
+          model: SolicitudDetalle,
+        },
+      ],
+    });
     if (!analisys) {
       return res
         .status(404)
         .json({ status: false, msg: "Análisis no encontrado" });
     }
+    const existingAnalisisIds = analisys.solicituddetalles.map(
+      (detalle) => detalle.idAnalisis
+    );
+
+    const idsToAdd = idAnalisis.filter(
+      (id) => !existingAnalisisIds.includes(id)
+    );
+    const idsToRemove = existingAnalisisIds.filter(
+      (id) => !idAnalisis.includes(id)
+    );
+
+    for (const id of idsToAdd) {
+      await SolicitudDetalle.create({
+        idSolicitud: analisys.id,
+        idAnalisis: id,
+      });
+    }
+
+    await SolicitudDetalle.destroy({
+      where: { idSolicitud: analisys.id, idAnalisis: idsToRemove },
+    });
 
     const updatedAnalisys = await analisys.update({
       paciente: name,
@@ -150,12 +174,11 @@ module.exports.getSolicitudRecepcionista = async (req, res, next) => {
         idUsuarioLab: { [Op.is]: null },
       },
     });
-    const userdata = await User.findByPk("24")
+    const userdata = await User.findByPk("24");
 
-    console.log("userdata",userdata)
     res.json(SolicitudRecepcionista);
   } catch (error) {
-    console.error("este es el error", error)
+    console.error("este es el error", error);
     res.json({ msg: "No se pudo obtener los datos", status: false });
   }
 };

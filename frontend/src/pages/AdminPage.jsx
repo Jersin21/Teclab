@@ -69,6 +69,5 @@ const TableContainer = styled.div`
   background-color: #25136a; 
   padding: 1rem;
   border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
 `;
 export default AdminPage
