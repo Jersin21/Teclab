@@ -18,8 +18,8 @@ const FormContainer = styled.div`
   background-color: #1a1a2e;
   flex-direction: column;
   align-items: center;
-  height: 100vh; 
-  overflow-y: auto; 
+  height: 100vh;
+  overflow-y: auto;
 `;
 const BackButton = styled.button`
   position: absolute;
@@ -117,24 +117,70 @@ const RegisterDoctor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { nombre, celular, especialidad, email, usuario, password } = medico;
+
+    if (!params.id) {
+      if (
+        !nombre ||
+        !celular ||
+        !especialidad ||
+        !email ||
+        !usuario ||
+        !password
+      ) {
+        toast.error("Por favor, completa todos los campos.", toastOptions);
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        toast.error("Por favor, ingresa un email válido.", toastOptions);
+        return;
+      }
+    } else {
+      if (!nombre || !celular || !especialidad || !email || !usuario) {
+        toast.error("Por favor, completa todos los camposs.", toastOptions);
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        toast.error("Por favor, ingresa un email válido.", toastOptions);
+        return;
+      }
+    }
+
     try {
       if (!params.id) {
         const { data } = await axios.post(medicoRoute, medico, config);
 
         if (data.status === false) {
-          toast.error(data.msg, toastOptions);
+          toast.error("El usuario ya existe", toastOptions);
         }
         if (data.status === true) {
-          toast.success(data.msg, toastOptions);
+          toast.success("Se ha creado al medico", toastOptions);
           setTimeout(() => {
-            navigate("/");
-          }, 1000);
+            window.location.href = "/medicos";
+          }, 800);
         }
       } else {
-        await axios.put(`${medicoRoute}/${params.id}`, medico, config);
+        const { data } = await axios.put(
+          `${medicoRoute}/${params.id}`,
+          medico,
+          config
+        );
+        if (data.status === true) {
+          toast.success("Se actualizo el medico", toastOptions);
+          setTimeout(() => {
+            window.location.href = "/medicos";
+          }, 800);
+        } else {
+          toast.error("No se pudo actualizar el medico", toastOptions);
+          setTimeout(() => {
+            window.location.href = "/medicos";
+          }, 800);
+        }
       }
-      e.target.reset();
-      navigate("/medicos");
     } catch (error) {
       console.error("Error al enviar datos al servidor:", error);
     }
@@ -148,7 +194,7 @@ const RegisterDoctor = () => {
         const res = await axios.get(`${medicoRoute}/${params.id}`, config);
         const medicoData = res.data;
         const { especialidad, User } = medicoData;
-        const { id: userid, email, persona } = User;
+        const { id: userid, email, username, password, persona } = User;
         const { id: personaid, nombre, celular } = persona;
         setMedico({
           nombre,
@@ -157,6 +203,8 @@ const RegisterDoctor = () => {
           email,
           userid,
           personaid,
+          usuario: username,
+          password,
         });
       } catch (error) {
         console.error("Error al obtener los datos del médico:", error);
@@ -173,9 +221,7 @@ const RegisterDoctor = () => {
             {params.id ? "Actualizar Medico" : "Nuevo Medico"}
           </FormHeader>
           <FormularioMedico onSubmit={handleSubmit}>
-            <BackButton onClick={() => navigate("/medicos")}>
-              Volver
-            </BackButton>
+            <BackButton onClick={() => navigate("/medicos")}>Volver</BackButton>
             <label>
               Nombre:
               <input
@@ -239,7 +285,7 @@ const RegisterDoctor = () => {
             </button>
           </FormularioMedico>
         </FormularioMedicoContainer>
-        <ToastContainer transition={Flip} />
+        <ToastContainer />
       </FormContainer>
     </>
   );

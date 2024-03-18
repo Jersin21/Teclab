@@ -62,7 +62,6 @@ function Login() {
       toast.error("Username and password is required", toastOptions);
       return false;
     }
-    console.log(values);
 
     return true;
   };

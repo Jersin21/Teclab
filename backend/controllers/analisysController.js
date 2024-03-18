@@ -5,8 +5,6 @@ const Resultado = require("../models/resultadoModel");
 const Analisys = require("../models/tipoanalisysModel");
 const Categoria = require("../models/categoriaModel");
 const { Op } = require("sequelize");
-const fs = require("fs").promises;
-const path = require("path");
 const User = require("../models/userModel");
 const Clinica = require("../models/clinicaModel");
 const TipoUsuario = require("../models/tipousuarioModel");
@@ -219,7 +217,6 @@ module.exports.subirResultado = async (req, res, next) => {
         detalle: result.value,
         idSolicitudDetalle: result.id,
       });
-
       return resultado;
     });
     for (const image of images) {

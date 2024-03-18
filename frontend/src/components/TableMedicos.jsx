@@ -123,7 +123,7 @@ function TableMedicos({ data }) {
                         if (data.status === true) {
                           toast.success("Se eliminó al medico exitosamente", toastOptions);
                           setTimeout(() => {
-                            window.location.reload();
+                            window.location.href = "/medicos";
                           }, 500);
                         }
                       } catch (error) {

@@ -3,19 +3,30 @@ const User = require("../models/userModel");
 const { generateJWT } = require("../helpers/token");
 const bcrypt = require("bcrypt");
 const Persona = require("../models/personaModel");
+const { Op } = require("sequelize");
+
 
 module.exports.createClinica = async (req, res, next) => {
-  const { nombre, direccion, telefono, especialidades, responsable, password } =
+  const { name, direccion, telefono, especialidades, responsable, password } =
     req.body;
   try {
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [{ username: responsable }],
+      },
+    });
+
+    if (existingUser) {
+      return res.json({ status: false, msg: "Ya existe el usuario" });
+    }
     const clinica = await Clinica.create({
-      name: nombre,
+      name,
       direccion,
       telefono,
       especialidades,
     });
     const persona = await Persona.create({
-      nombre: nombre,
+      nombre: responsable,
       email: "jjjj@gmail.com",
       celular: "###",
     });
@@ -51,7 +62,6 @@ module.exports.getClinica = async (req, res, next) => {
   const { id } = req.params;
   try {
     const clinica = await Clinica.findOne({ where: { id } });
-
     res.json(clinica);
   } catch (error) {
     next(error);
@@ -69,13 +79,13 @@ module.exports.getClinicas = async (req, res, next) => {
 module.exports.updateClinica = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, direccion, telefono, especialidades} = req.body;
+    const { name, direccion, telefono, especialidades } = req.body;
 
-    await Clinica.update(
+    const clinica = await Clinica.update(
       { name, direccion, telefono, especialidades },
       { where: { id } }
     );
-    return res.json();
+    return res.json({status:true, clinica });
   } catch (error) {
     console.error(error);
     s;

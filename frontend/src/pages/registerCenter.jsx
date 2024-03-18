@@ -14,8 +14,8 @@ const FormContainer = styled.div`
   background-color: #1a1a2e;
   flex-direction: column;
   align-items: center;
-  height: 100vh; 
-  overflow-y: auto; 
+  height: 100vh;
+  overflow-y: auto;
 `;
 
 const FormularioCentroMedicoContainer = styled.div`
@@ -84,6 +84,8 @@ function RegisterCenter() {
     direccion: "",
     telefono: "",
     especialidades: "",
+    responsable: "",
+    password: "",
   });
   const navigate = useNavigate();
   const toastOptions = {
@@ -110,6 +112,27 @@ function RegisterCenter() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { name, direccion, telefono, especialidades, responsable, password } =
+      centroMedico;
+
+    if (!params.id) {
+      if (
+        !name ||
+        !direccion ||
+        !especialidades ||
+        !telefono ||
+        !responsable ||
+        !password
+      ) {
+        toast.error("Por favor, completa todos los campos.", toastOptions);
+        return;
+      }
+    } else {
+      if (!name || !direccion || !especialidades || !telefono) {
+        toast.error("Por favor, completa todos los camposs.", toastOptions);
+        return;
+      }
+    }
     try {
       if (!params.id) {
         const {
@@ -138,14 +161,24 @@ function RegisterCenter() {
         if (data.status === true) {
           toast.success(data.msg, toastOptions);
           setTimeout(() => {
-            navigate("/");
+            navigate("/admin");
           }, 1000);
         }
       } else {
-        await axios.put(`${centerRoute}/${params.id}`, centroMedico, config);
+        const { data } = await axios.put(
+          `${centerRoute}/${params.id}`,
+          centroMedico,
+          config
+        );
+        if (data.status === true) {
+          toast.success("Se actualizo el centro", toastOptions);
+          setTimeout(() => {
+            window.location.href = "/admin";
+          }, 800);
+        } else {
+          toast.error("No se pudo actualizar el centro", toastOptions);
+        }
       }
-      e.target.reset();
-      navigate("/admin");
     } catch (error) {
       console.error("Error al enviar datos al servidor:", error);
     }
@@ -170,9 +203,7 @@ function RegisterCenter() {
       <FormContainer>
         <FormularioCentroMedicoContainer>
           <FormularioCentroMedico onSubmit={handleSubmit}>
-            <BackButton onClick={() => navigate("/admin")}>
-              Volver
-            </BackButton>
+            <BackButton onClick={() => navigate("/admin")}>Volver</BackButton>
             <label>
               Nombre del Centro Médico:
               <input
@@ -235,7 +266,7 @@ function RegisterCenter() {
             </button>
           </FormularioCentroMedico>
         </FormularioCentroMedicoContainer>
-        <ToastContainer transition={Flip} />
+        <ToastContainer />
       </FormContainer>
     </>
   );

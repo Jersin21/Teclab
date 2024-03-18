@@ -51,9 +51,17 @@ const InputFile = ({ onChange, onImagesChange, analisisids }) => {
     const selectedFiles = e.target.files;
     const selectedFilesArray = Array.from(selectedFiles);
 
-    const newFiles = selectedFilesArray.filter(
-      (file) => !files.some((f) => f.name === file.name)
+    const existingFiles = selectedFilesArray.filter(
+      (file) => files.some((f) => f.name === file.name)
     );
+
+    if (existingFiles.length > 0) {
+      toast.error(
+        "Una o más imágenes seleccionadas ya existen en la lista.",
+        toastOptions
+      );
+      return;
+    }
 
 
     const isValidFileType = selectedFilesArray.every((file) =>
@@ -80,8 +88,8 @@ const InputFile = ({ onChange, onImagesChange, analisisids }) => {
       return;
     }
 
-    if (selectedFilesArray.length > 5) {
-      toast.error("No puedes subir más de 5 archivos.", toastOptions);
+    if (files.length + selectedFilesArray.length > 5) {
+      toast.error("No puedes seleccionar más de 5 archivos.", toastOptions);
       return;
     }
 

@@ -22,12 +22,13 @@ const CheckboxInput = styled.input`
   cursor: pointer;
   height: 18px;
   width: 18px;
-  margin-right: 8px;
 `;
 
 const CheckboxLabel = styled.label`
   color: white;
   cursor: pointer;
+  margin:10px;
+  padding-bottom: 10px;
 `;
 
 const RadioButtonsContainer = ({
@@ -63,7 +64,6 @@ const RadioButtonsContainer = ({
         return [...prevSelected, idAnalisis];
       }
     });
-    console.log(selectedAnalisisIds);
   };
 
   return (
@@ -71,6 +71,7 @@ const RadioButtonsContainer = ({
       {Object.keys(categoriasConAnalisis).map((categoriaNombre, index) => (
         <div key={index}>
           <CategoryTitle>{categoriaNombre}</CategoryTitle>
+          <br />
           <CheckboxRow>
             {categoriasConAnalisis[categoriaNombre].map(
               (analisis, analisisIndex) => (
@@ -91,6 +92,7 @@ const RadioButtonsContainer = ({
           </CheckboxRow>
         </div>
       ))}
+      <br />
     </Container>
   );
 };

@@ -171,7 +171,7 @@ function FormAnalisys() {
           window.location.href = "/medico";
         }, 800);
       } else {
-        toast.error("No se pudo actulizar la solicitud", toastOptions);
+        toast.error("No se pudo actualizar la solicitud", toastOptions);
         setTimeout(() => {
           window.location.href = "/medico";
         }, 800);

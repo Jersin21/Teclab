@@ -4,13 +4,19 @@ const Persona = require("../models/personaModel");
 const { generateJWT } = require("../helpers/token");
 const bcrypt = require("bcrypt");
 const Clinica = require("../models/clinicaModel");
+const { Op } = require("sequelize");
+
 
 module.exports.getMedicos = async (req, res, next) => {
+  const { idClinica } = req.user;
   try {
     const medicos = await Medico.findAll({
       include: [
         {
           model: Clinica,
+          where: {
+            id: idClinica,
+          },
         },
         {
           model: User,
@@ -30,6 +36,16 @@ module.exports.createMedico = async (req, res, next) => {
   const { idClinica } = req.user;
 
   try {
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [{ username: usuario }, { email: email }],
+      },
+    });
+
+    if (existingUser) {
+      return res
+        .json({ status: false,msg:"Ya existe el usuario"});
+    }
     const persona = await Persona.create({
       nombre,
       email,
@@ -57,7 +73,6 @@ module.exports.createMedico = async (req, res, next) => {
     const access_token = generateJWT(users.id);
     return res.json({
       status: true,
-      msg: "Médico creado exitosamente",
       user: { users, access_token },
     });
   } catch (error) {

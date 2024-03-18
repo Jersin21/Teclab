@@ -120,12 +120,24 @@ const FormSubir = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const areResultsComplete = results.every(
-      (result) => result.value.trim() !== ""
+    const areResultsEntered = data.solicitud?.solicituddetalles?.every(
+      (detalle) => results.some((result) => result.id === detalle.id)
     );
-    if (!areResultsComplete) {
+
+    if (!areResultsEntered) {
       toast.error(
-        "Por favor, completa todos los campos de resultado.",
+        "Por favor, ingresa al menos un resultado para cada formulario.",
+        toastOptions
+      );
+      return;
+    }
+    const areImagesSelected = data.solicitud?.solicituddetalles?.every(
+      (detalle) => images.some((image) => image.id === detalle.id)
+    );
+
+    if (!areImagesSelected) {
+      toast.error(
+        "Por favor, selecciona al menos una imagen para cada formulario.",
         toastOptions
       );
       return;
@@ -133,10 +145,8 @@ const FormSubir = () => {
     try {
       const formData = new FormData();
       formData.append("results", JSON.stringify(results));
-
       for (const analysis of images) {
         const { id, images: imageArray } = analysis;
-
         for (const image of imageArray) {
           if (image instanceof File) {
             const newImageName = `${id}-${image.name}`;
@@ -154,8 +164,9 @@ const FormSubir = () => {
         setTimeout(() => {
           window.location.href = "/responsable";
         }, 1000);
-      } else {
-        toast.error("Error al subir resultado y archivo", toastOptions);
+      }
+      if (response.data.status === false) {
+        toast.error(response.data.message, toastOptions);
       }
     } catch (error) {
       console.error("Error:", error);
