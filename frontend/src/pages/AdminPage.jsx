@@ -22,7 +22,7 @@ function AdminPage() {
     };
     const [clinicas, setClinicas] = useState([]);
   
-    if (idTipoUsuario !== 2) {
+    if (idTipoUsuario !== 1) {
       navigate("/");
     }
     useEffect(() => {

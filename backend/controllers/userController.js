@@ -57,7 +57,8 @@ module.exports.register = async (req, res, next) => {
       password: hashedPassword,
       estado: 1,
       idPersona: 40,
-      idTipoUsuario: 6,
+      idTipoUsuario: 1,
+      idClinica:32,
     });
 
     delete newUser.dataValues.password;

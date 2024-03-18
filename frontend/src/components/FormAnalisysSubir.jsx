@@ -18,8 +18,7 @@ const Form = styled.form`
   }
 
   textarea {
-    width: 100%;
-    max-width: 100%;
+    width: 600px;
     margin-bottom: 15px;
     padding: 10px;
     border: 1px solid white;
@@ -86,6 +85,9 @@ const AnalysisForm = ({
       <textarea
         id={`resultado-${analysis.analisis.id}`}
         name={`resultado-${analysis.analisis.id}`}
+        rows="4"
+        cols="50"
+        placeholder="Ingrese la descripción"
         value={resultado}
         onChange={handleResultadoChange}
         required

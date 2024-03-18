@@ -117,6 +117,14 @@ const Sidebar = () => {
             <button onClick={() => navigate("/medicos")}>Administracion de medicos</button>
           </SidebarMenuItem>
         )}
+        {auth.idTipoUsuario === 1 && (
+          <SidebarMenuItem
+            onClick={() => handleItemClick("Administracion de centros")}
+            isActive={activeItem === "Administracion de centros"}
+          >
+            <button onClick={() => navigate("/admin")}>Administracion de medicos</button>
+          </SidebarMenuItem>
+        )}
       </SidebarMenu>
       <Logout />
     </SidebarContainer>

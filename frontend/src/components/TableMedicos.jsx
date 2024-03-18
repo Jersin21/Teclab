@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -65,11 +65,21 @@ const DeleteButton = styled(ActionButton)`
 const CreateButton = styled(ActionButton)`
   background-color: #27ae60;
 `;
+const SearchInput = styled.input`
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
 
 function TableMedicos({ data }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const filteredData = data.filter((item) =>
+    item.User?.persona?.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -96,6 +106,12 @@ function TableMedicos({ data }) {
         >
           CREAR
         </CreateButton>
+        <SearchInput
+          type="text"
+          placeholder="Buscar médico ..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <TableWrapper>
           <TableHead>
             <TableRow>
@@ -105,7 +121,7 @@ function TableMedicos({ data }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item, index) => (
+            {filteredData.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.User?.persona?.nombre}</TableCell>
                 <TableCell>{item.especialidad}</TableCell>

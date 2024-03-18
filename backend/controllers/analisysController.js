@@ -154,16 +154,28 @@ module.exports.deleteAnalisys = async (req, res, next) => {
   const { id } = req.params;
 
   try {
+    const solicituddetalles = await SolicitudDetalle.findAll({ where: { idSolicitud: id } });
+
+    await Promise.all(
+      solicituddetalles.map(async (detalle) => {
+        await Resultado.destroy({ where: { idSolicitudDetalle: detalle.id }, force: true });
+        await Image.destroy({ where: { idSolicitudDetalle: detalle.id }, force: true });
+      })
+    );
+
     await SolicitudDetalle.destroy({ where: { idSolicitud: id } });
 
-    const solicitud = await Solicitud.destroy({ where: { id } });
+    const solicitud = await Solicitud.findByPk(id);
+    
+    await solicitud.destroy({ force: true });
 
     return res.json({ status: true, solicitud });
   } catch (error) {
     console.error("Error al eliminar:", error);
-    return res.json({ msg: error, status: false });
+    return res.json({ msg: error.message, status: false });
   }
 };
+
 module.exports.getSolicitudRecepcionista = async (req, res, next) => {
   try {
     const SolicitudRecepcionista = await Solicitud.findAll({

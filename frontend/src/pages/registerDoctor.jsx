@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { medicoRoute } from "../utils/APIroute";
 import { useNavigate, useParams } from "react-router-dom";
-import { Flip, ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 

@@ -23,8 +23,18 @@ const Form = styled.form`
 
   p {
     width: 100%;
-    text-align: center; /* Centra el texto horizontalmente */
-    word-wrap: break-word; /* Permite que el texto se ajuste al ancho del form */
+    text-align: center; 
+    word-wrap: break-word; 
+  }
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #292a44;
+    color: white;
+    box-sizing: border-box;
+    resize: vertical;
   }
 `;
 
@@ -70,7 +80,13 @@ const FormVerAnalisys = ({ analisys }) => {
       <br />
       <label>
         Detalles:
-        <span>{analisys.resultado.detalle}</span>
+        <br />
+        <textarea
+        rows="4"
+        cols="50"
+          value={analisys.resultado.detalle}
+          readOnly
+        ></textarea>
       </label>{" "}
       <Button type="button" onClick={toggleGallery}>
         {showGallery ? "Dejar de ver" : "Ver imágenes"}

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { analisysRoute } from "../utils/APIroute";
@@ -25,7 +25,7 @@ const TableHead = styled.thead`
 `;
 
 const TableContainer = styled.div`
-  margin-left: 250px; 
+  margin-left: 250px;
 `;
 
 const TableBody = styled.tbody``;
@@ -38,7 +38,7 @@ const TableCell = styled.td`
   color: white;
 
   &:last-child {
-    width: 300px; 
+    width: 300px;
   }
 `;
 
@@ -52,7 +52,7 @@ const ActionButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #4caf50; 
+    background-color: #4caf50;
   }
 `;
 
@@ -71,9 +71,20 @@ const ViewButton = styled(ActionButton)`
 const CreateButton = styled(ActionButton)`
   background-color: #27ae60;
 `;
+const SearchInput = styled.input`
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
 
 const Table = ({ data }) => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredData = data.filter((item) =>
+    item.paciente.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const toastOptions = {
     position: "top-right",
@@ -102,11 +113,16 @@ const Table = ({ data }) => {
       >
         CREAR
       </CreateButton>
-
+        <SearchInput
+        type="text"
+        placeholder="Buscar paciente..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       <TableWrapper>
         <TableHead>
           <TableRow>
-            <th>Nombre</th>
+            <th>Paciente</th>
             <th>Fecha</th>
             <th>Tipo de muestra</th>
             <th>Estado</th>
@@ -114,7 +130,7 @@ const Table = ({ data }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((item, index) => (
+          {filteredData.map((item, index) => (
             <TableRow key={index}>
               <TableCell>{item.paciente}</TableCell>
               <TableCell>{item.fecha}</TableCell>
@@ -143,10 +159,16 @@ const Table = ({ data }) => {
                         config
                       );
                       if (data.status === false) {
-                        toast.error("No se pudo eliminar la solicitud", toastOptions);
+                        toast.error(
+                          "No se pudo eliminar la solicitud",
+                          toastOptions
+                        );
                       }
                       if (data.status === true) {
-                        toast.success("Solicitud eliminada exitosamente", toastOptions);
+                        toast.success(
+                          "Solicitud eliminada exitosamente",
+                          toastOptions
+                        );
                         setTimeout(() => {
                           window.location.reload();
                         }, 500);

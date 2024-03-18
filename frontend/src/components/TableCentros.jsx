@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -25,7 +25,7 @@ const TableHead = styled.thead`
 `;
 
 const TableContainer = styled.div`
-  margin-left: 250px; 
+  margin-left: 250px;
 `;
 
 const TableBody = styled.tbody``;
@@ -38,7 +38,7 @@ const TableCell = styled.td`
   color: white;
 
   &:last-child {
-    width: 300px; 
+    width: 300px;
   }
 `;
 
@@ -52,7 +52,7 @@ const ActionButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #4caf50; 
+    background-color: #4caf50;
   }
 `;
 const EditButton = styled(ActionButton)`
@@ -65,11 +65,21 @@ const DeleteButton = styled(ActionButton)`
 const CreateButton = styled(ActionButton)`
   background-color: #27ae60;
 `;
+const SearchInput = styled.input`
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
 
 function TableCentros({ data }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1");
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const filteredData = data.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -96,6 +106,12 @@ function TableCentros({ data }) {
         >
           CREAR
         </CreateButton>
+        <SearchInput
+          type="text"
+          placeholder="Buscar centro..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <TableWrapper>
           <TableHead>
             <TableRow>
@@ -106,13 +122,14 @@ function TableCentros({ data }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item, index) => (
+            {filteredData.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.direccion}</TableCell>
                 <TableCell>{item.especialidades}</TableCell>
                 <TableCell>
                   <DeleteButton
+                    type="button"
                     onClick={async () => {
                       try {
                         const { data } = await axios.delete(
@@ -120,12 +137,18 @@ function TableCentros({ data }) {
                           config
                         );
                         if (data.status === false) {
-                          toast.error("No se pudo eliminar el centro", toastOptions);
+                          toast.error(
+                            "No se pudo eliminar el centro",
+                            toastOptions
+                          );
                         }
                         if (data.status === true) {
-                          toast.success("Se eliminó el centro medico exitosamente", toastOptions);
+                          toast.success(
+                            "Se eliminó el centro medico exitosamente",
+                            toastOptions
+                          );
                           setTimeout(() => {
-                            window.location.reload();
+                            window.location.reload("/admin");
                           }, 500);
                         }
                       } catch (error) {
