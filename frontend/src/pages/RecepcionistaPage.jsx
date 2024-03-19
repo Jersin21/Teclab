@@ -33,10 +33,6 @@ function RecepcionistaPage() {
     async function fectData() {
       const res = await axios.get(recepcionistaRoute, config);
       setData(res.data);
-      const resMedico = await axios.get(getmedicoRoute,config);
-      setMedico(resMedico.data);
-      console.log(res.data)
-      console.log(resMedico.data)
     }
     fectData();
   }, [idTipoUsuario, isLoading, navigate]);

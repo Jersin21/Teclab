@@ -15,6 +15,10 @@ const SidebarContainer = styled.div`
   color: white;
   overflow-x: hidden;
   z-index: 1000;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const SidebarHeader = styled.div`
@@ -65,7 +69,6 @@ const SidebarMenuItem = styled.li`
     cursor: pointer;
   }
 `;
-
 
 const Sidebar = () => {
   const [activeItem, setActiveItem] = React.useState(null);

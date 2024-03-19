@@ -23,11 +23,12 @@ const Form = styled.form`
 
   p {
     width: 100%;
-    text-align: center; 
-    word-wrap: break-word; 
+    text-align: center;
+    word-wrap: break-word;
   }
   textarea {
-    width: 100%;
+    width: 600px;
+    margin-bottom: 15px;
     padding: 10px;
     border: 1px solid white;
     border-radius: 5px;
@@ -82,8 +83,8 @@ const FormVerAnalisys = ({ analisys }) => {
         Detalles:
         <br />
         <textarea
-        rows="4"
-        cols="50"
+          rows="5"
+          cols="50"
           value={analisys.resultado.detalle}
           readOnly
         ></textarea>

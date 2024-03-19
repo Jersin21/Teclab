@@ -7,6 +7,7 @@ const TableWrapper = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
 `;
+
 const NoData = styled.div`
   padding: 20px;
   background-color: #f2f2f2;
@@ -64,20 +65,22 @@ function TableResponsable({ data }) {
       <TableWrapper>
         <TableHead>
           <TableRow>
-            <th>Nombre</th>
-            <th>Fecha</th>
-            <th>Tipo de muestra</th>
-            <th>Estado</th>
+            <th>Nombre del Paciente</th>
+            <th>Nombre del Médico</th>
+            <th>Especialidad del Médico</th>
+            <th>Observaciones</th>
+            <th>Nombre de la Clínica</th>
             <th>Acciones</th>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((item, index) => (
+          {data.solicitudes.map((item, index) => (
             <TableRow key={index}>
               <TableCell>{item.paciente}</TableCell>
-              <TableCell>{item.fecha}</TableCell>
-              <TableCell>{item.muestra}</TableCell>
-              <TableCell>{item.estado}</TableCell>
+              <TableCell>{item.medico.User.persona.nombre}</TableCell>
+              <TableCell>{item.medico.especialidad}</TableCell>
+              <TableCell>{item.observaciones}</TableCell>
+              <TableCell>{item.medico.clinica.name}</TableCell>
               <TableCell>
                 <ActionButton
                   onClick={() => {

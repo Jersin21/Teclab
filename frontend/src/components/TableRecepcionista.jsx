@@ -71,20 +71,28 @@ function TableRecepcionista({ data }) {
       <TableWrapper>
         <TableHead>
           <TableRow>
-            <th>Nombre</th>
-            <th>Fecha</th>
-            <th>Tipo de muestra</th>
-            <th>Estado</th>
+            <th>Nombre del Médico</th>
+            <th>Especialidad</th>
+            <th>Clinica</th>
             <th>Acciones</th>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((item, index) => (
+          {data.solicitudes.map((item, index) => (
             <TableRow key={index}>
-              <TableCell>{item.paciente}</TableCell>
-              <TableCell>{item.fecha}</TableCell>
-              <TableCell>{item.muestra}</TableCell>
-              <TableCell>{item.estado}</TableCell>
+              {item.medico ? (
+                <>
+                  <TableCell>{item.medico.User.persona.nombre}</TableCell>
+                  <TableCell>{item.medico.especialidad}</TableCell>
+                  <TableCell>{item.medico.clinica.name}</TableCell>
+                </>
+              ) : (
+                <>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
+                </>
+              )}
               <TableCell>
                 <ActionButton
                   onClick={() => {

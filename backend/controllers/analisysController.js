@@ -4,6 +4,7 @@ const Image = require("../models/imageModel");
 const Resultado = require("../models/resultadoModel");
 const Analisys = require("../models/tipoanalisysModel");
 const Categoria = require("../models/categoriaModel");
+const Medico = require("../models/medicoModel");
 const { Op } = require("sequelize");
 const User = require("../models/userModel");
 const Clinica = require("../models/clinicaModel");
@@ -154,19 +155,27 @@ module.exports.deleteAnalisys = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const solicituddetalles = await SolicitudDetalle.findAll({ where: { idSolicitud: id } });
+    const solicituddetalles = await SolicitudDetalle.findAll({
+      where: { idSolicitud: id },
+    });
 
     await Promise.all(
       solicituddetalles.map(async (detalle) => {
-        await Resultado.destroy({ where: { idSolicitudDetalle: detalle.id }, force: true });
-        await Image.destroy({ where: { idSolicitudDetalle: detalle.id }, force: true });
+        await Resultado.destroy({
+          where: { idSolicitudDetalle: detalle.id },
+          force: true,
+        });
+        await Image.destroy({
+          where: { idSolicitudDetalle: detalle.id },
+          force: true,
+        });
       })
     );
 
     await SolicitudDetalle.destroy({ where: { idSolicitud: id } });
 
     const solicitud = await Solicitud.findByPk(id);
-    
+
     await solicitud.destroy({ force: true });
 
     return res.json({ status: true, solicitud });
@@ -178,29 +187,96 @@ module.exports.deleteAnalisys = async (req, res, next) => {
 
 module.exports.getSolicitudRecepcionista = async (req, res, next) => {
   try {
-    const SolicitudRecepcionista = await Solicitud.findAll({
+    const solicitudes = await Solicitud.findAll({
       where: {
         estado: "Iniciado",
-        idUsuarioLab: { [Op.is]: null },
+        idUsuarioLab: null,
       },
     });
-    const userdata = await User.findByPk("24");
 
-    res.json(SolicitudRecepcionista);
+    const idsMedicos = solicitudes.map(
+      (solicitud) => solicitud.idUsuarioMedico
+    );
+
+    const medicos = await Medico.findAll({
+      where: {
+        idUsuario: {
+          [Op.in]: idsMedicos,
+        },
+      },
+      include: [
+        {
+          model: Clinica,
+        },
+        {
+          model: User,
+          include: {
+            model: Persona,
+          },
+        },
+      ],
+    });
+
+    const solicitudesConMedicos = solicitudes.map((solicitud) => {
+      const medicoAsignado = medicos.find(
+        (medico) => medico.idUsuario === solicitud.idUsuarioMedico
+      );
+      return {
+        ...solicitud.toJSON(),
+        medico: medicoAsignado ? medicoAsignado.toJSON() : null,
+      };
+    });
+
+    res.json({ solicitudes: solicitudesConMedicos });
   } catch (error) {
-    console.error("este es el error", error);
+    console.error("Este es el error:", error);
     res.json({ msg: "No se pudo obtener los datos", status: false });
   }
 };
 
+
 module.exports.getSolicitudResponsable = async (req, res, next) => {
   try {
     const idUsuarioLab = req.user.id;
+
+    // Obtener las solicitudes pendientes para el usuario responsable
     const SolicitudResponsable = await Solicitud.findAll({
       where: { estado: "Pendiente", idUsuarioLab },
     });
-    res.json(SolicitudResponsable);
+
+    // Obtener información adicional de los médicos asociados a las solicitudes
+    const idsMedicos = SolicitudResponsable.map(
+      (solicitud) => solicitud.idUsuarioMedico
+    );
+    const medicos = await Medico.findAll({
+      where: { idUsuario: { [Op.in]: idsMedicos } },
+      include: [
+        {
+          model: Clinica,
+        },
+        {
+          model: User,
+          include: {
+            model: Persona,
+          },
+        },
+      ],
+    });
+
+    // Agrupar las solicitudes con sus médicos correspondientes
+    const solicitudesConMedicos = SolicitudResponsable.map((solicitud) => {
+      const medicoAsignado = medicos.find(
+        (medico) => medico.idUsuario === solicitud.idUsuarioMedico
+      );
+      return {
+        ...solicitud.toJSON(),
+        medico: medicoAsignado ? medicoAsignado.toJSON() : null,
+      };
+    });
+
+    res.json({ solicitudes: solicitudesConMedicos });
   } catch (error) {
+    console.error("Error al obtener las solicitudes:", error);
     res.json({ msg: "No se pudo obtener los datos", status: false });
   }
 };
