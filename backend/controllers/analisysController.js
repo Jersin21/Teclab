@@ -234,7 +234,6 @@ module.exports.getSolicitudRecepcionista = async (req, res, next) => {
   }
 };
 
-
 module.exports.getSolicitudResponsable = async (req, res, next) => {
   try {
     const idUsuarioLab = req.user.id;
@@ -381,19 +380,46 @@ module.exports.getAnalisysVer = async (req, res, next) => {
               },
             },
             {
-              model: Resultado,
+              model: Resultado, 
             },
             {
-              model: Image,
+              model: Image, 
             },
           ],
         },
       ],
     });
 
-    return res.json({ status: true, solicitud });
+    if (!solicitud) {
+      return res.status(404).json({ status: false, message: "Solicitud no encontrada" });
+    }
+
+    const medico = await Medico.findOne({
+      where: {
+        idUsuario: solicitud.idUsuarioMedico,
+      },
+      include: [
+        {
+          model: Clinica,
+        },
+        {
+          model: User,
+          include: {
+            model: Persona,
+          },
+        },
+      ],
+    });
+
+    const solicitudConMedico = {
+      ...solicitud.toJSON(),
+      medico: medico ? medico.toJSON() : null,
+    };
+
+    return res.json({ status: true, solicitud: solicitudConMedico });
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
+
