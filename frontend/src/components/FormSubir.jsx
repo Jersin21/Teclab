@@ -24,6 +24,8 @@ const FormContainer = styled.div`
 
 const SubirResultadoButton = styled.button`
   margin-top: 10px;
+  margin-left: 260px;
+  left: 100px;
   padding: 10px;
   background-color: #4caf50;
   color: #fff;
@@ -32,9 +34,9 @@ const SubirResultadoButton = styled.button`
   border-radius: 5px;
 `;
 const BackButton = styled.button`
-  position: absolute;
+  position: relative;
   top: 20px;
-  right: 20px;
+  left: 600px;
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;
@@ -177,9 +179,9 @@ const FormSubir = () => {
   return (
     <FormContainer>
       <Sidebar />
+      <BackButton onClick={() => navigate("/responsable")}>Volver</BackButton>
       <h1>Subir Resultado de Análisis</h1>
       <form onSubmit={(e) => handleSubmit(e)} enctype="multipart/form-data">
-        <BackButton onClick={() => navigate("/responsable")}>Volver</BackButton>
         {data.solicitud?.solicituddetalles?.map((detalle, index) => (
           <AnalysisForm
             key={index}
@@ -196,6 +198,7 @@ const FormSubir = () => {
           Subir Resultado
         </SubirResultadoButton>
       </form>
+
       <ToastContainer></ToastContainer>
     </FormContainer>
   );

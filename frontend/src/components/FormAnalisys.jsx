@@ -20,9 +20,9 @@ const FormContainer = styled.div`
   overflow-y: auto;
 `;
 const BackButton = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: relative;
+  bottom: 20px;
+  left: 500px;
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;

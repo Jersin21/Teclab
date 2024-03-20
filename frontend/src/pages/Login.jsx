@@ -56,10 +56,10 @@ function Login() {
   const handleValidation = () => {
     const { username, password } = values;
     if (password === "") {
-      toast.error("Username and password is required", toastOptions);
+      toast.error("Por favor, complete todos los campos", toastOptions);
       return false;
     } else if (username === "") {
-      toast.error("Username and password is required", toastOptions);
+      toast.error("Por favor, complete todos los campos", toastOptions);
       return false;
     }
 

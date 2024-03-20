@@ -9,10 +9,10 @@ module.exports.login = async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { username: username } });
     if (!user)
-      return res.json({ msg: "Incorrect Username or Password", status: false });
+      return res.json({ msg: "Usuario y/o contraseña incorrecta", status: false });
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
-      return res.json({ msg: "Incorrect Username or Password", status: false });
+      return res.json({ msg: "Usuario y/o contraseña incorrecta", status: false });
     delete user.password;
     const access_token = generateJWT(
       user.id,

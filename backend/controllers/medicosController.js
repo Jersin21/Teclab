@@ -65,12 +65,19 @@ module.exports.createMedico = async (req, res, next) => {
   try {
     const existingUser = await User.findOne({
       where: {
-        [Op.or]: [{ username: usuario }, { email: email }],
+        username: usuario,
       },
     });
 
     if (existingUser) {
       return res.json({ status: false, msg: "Ya existe el usuario" });
+    }
+    const emailCheck = await User.findOne({
+      where: { email },
+    });
+
+    if (emailCheck) {
+      return res.json({ msg: "Ya existe el correo", status: false });
     }
     const persona = await Persona.create({
       nombre,

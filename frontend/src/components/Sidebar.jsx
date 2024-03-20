@@ -125,7 +125,7 @@ const Sidebar = () => {
             onClick={() => handleItemClick("Administracion de centros")}
             isActive={activeItem === "Administracion de centros"}
           >
-            <button onClick={() => navigate("/admin")}>Administracion de medicos</button>
+            <button onClick={() => navigate("/admin")}>Administracion de centros</button>
           </SidebarMenuItem>
         )}
       </SidebarMenu>

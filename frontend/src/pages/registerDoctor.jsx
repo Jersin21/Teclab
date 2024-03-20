@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { medicoRoute } from "../utils/APIroute";
 import { useNavigate, useParams } from "react-router-dom";
-import {ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
@@ -22,9 +22,10 @@ const FormContainer = styled.div`
   overflow-y: auto;
 `;
 const BackButton = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: relative;
+  top: 10px;
+  bottom: 20px;
+  left: 500px;
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;
@@ -32,7 +33,6 @@ const BackButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  display: flex;
   align-items: center;
 
   &:hover {
@@ -155,7 +155,7 @@ const RegisterDoctor = () => {
         const { data } = await axios.post(medicoRoute, medico, config);
 
         if (data.status === false) {
-          toast.error("El usuario ya existe", toastOptions);
+          toast.error(data.msg, toastOptions);
         }
         if (data.status === true) {
           toast.success("Se ha creado al medico", toastOptions);
@@ -217,11 +217,11 @@ const RegisterDoctor = () => {
       <Sidebar />
       <FormContainer>
         <FormularioMedicoContainer>
+          <BackButton onClick={() => navigate("/medicos")}>Volver</BackButton>
           <FormHeader>
             {params.id ? "Actualizar Medico" : "Nuevo Medico"}
           </FormHeader>
           <FormularioMedico onSubmit={handleSubmit}>
-            <BackButton onClick={() => navigate("/medicos")}>Volver</BackButton>
             <label>
               Nombre:
               <input
